@@ -1,3 +1,5 @@
+package com.PUB_Online.PUB.Models;
+
 import javax.persistence.*;
 
 @Entity
