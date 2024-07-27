@@ -4,26 +4,45 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name="pratos")
 @Getter
 @Setter
-public class Prato {
-    @Column(name = "descricao", nullable = false)
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+public class Prato extends ItemMenu {
+
+    @Column(name = "descricao", nullable = false, length = 255)
     @NotBlank
-    private String descrição;
+    @Size(min = 10, max = 250)
+    private String descricao;
 
     @Column(name = "disponivel", nullable = false)
-    @NotBlank
+    @NotNull
     private boolean disponivel;
 
-    @Size(max=255)
+    @Column(name = "categoria", nullable = false)
+    @NotNull
     private Categoria categoria;
     
-    public enum Categoria{}
+    @Getter
+    @AllArgsConstructor
+    public enum Categoria {
+        ENTRADA(1),
+        PRATOPRINCIPAL(2),
+        SOBREMESA(3),
+        DRINK(4);
+
+        private int code;
+    }
     
 }

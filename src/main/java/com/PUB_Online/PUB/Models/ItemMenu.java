@@ -6,16 +6,21 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
-import jakarta.persistence.Table;
 import jakarta.persistence.InheritanceType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class ItemMenu {
     @Id
@@ -31,11 +36,4 @@ public abstract class ItemMenu {
     @Column(name = "preco", nullable = false)
     @NotBlank
     private float preco;
-
-    public ItemMenu() {}
-
-    public ItemMenu(String nome, float preco) {
-        this.nome = nome;
-        this.preco = preco;
-    }
 }
