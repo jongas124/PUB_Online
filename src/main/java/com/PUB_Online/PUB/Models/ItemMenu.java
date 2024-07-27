@@ -3,11 +3,14 @@ package com.PUB_Online.PUB.Models;
 import javax.persistence.*;
 
 @Entity
+@Table(name="itens_menu")
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class ItemMenu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", un)
     private Long id;
+    
     private String nome;
     private Double preco;
 
