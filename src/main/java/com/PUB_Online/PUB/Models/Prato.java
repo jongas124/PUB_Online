@@ -11,5 +11,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class Prato {
+    private String descrição;
+    private boolean disponivel;
+    private Categoria categoria;
+    
+    public enum Categoria{}
     
 }

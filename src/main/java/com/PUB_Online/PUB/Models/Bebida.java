@@ -10,7 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-public class Bebida {
+public class Bebida extends ItemMenu{
     private String tamanho;
     private int estoque;
 
