@@ -1,4 +1,4 @@
-package com.PUB_Online.PUB.Models;
+package com.PUB_Online.PUB.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
