@@ -23,9 +23,9 @@ public class ItemMenu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true)
-    private Long id;
+        private Long id;
 
-    @Column(name = "nome", nullable = false)
+        @Column(name = "nome", nullable = false)
     @NotBlank
     @Size(max=255)
     private String nome;

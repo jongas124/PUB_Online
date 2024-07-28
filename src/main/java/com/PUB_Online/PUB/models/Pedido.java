@@ -3,14 +3,18 @@ package com.PUB_Online.PUB.models;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import com.PUB_Online.PUB.util.ItemPedido;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -60,5 +64,8 @@ public class Pedido {
         private int code;
     }
 
-   // private List<ItemPedido> itens;
+    @OneToMany(mappedBy = "itemMenu")
+    @CollectionTable(name = "PedidoItens")
+    @Column(name = "item")
+    private List<ItemPedido> itens;
 }
