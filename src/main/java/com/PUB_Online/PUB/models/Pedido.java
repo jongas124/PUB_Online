@@ -3,7 +3,6 @@ package com.PUB_Online.PUB.models;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import com.PUB_Online.PUB.util.ItemPedido;
 
 import org.hibernate.annotations.CreationTimestamp;
 
