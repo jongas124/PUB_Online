@@ -2,7 +2,6 @@ package com.PUB_Online.PUB.models;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -53,11 +52,12 @@ public class Pedido {
     @Getter
     @AllArgsConstructor
     public enum Status {
-        FILA(1),
-        PREPARANDO(2),
-        ENTREGUE(3);
+        FILA(1, "Fila de Espera"),
+        PREPARANDO(2, "Preparando"),
+        ENTREGUE(3, "Entregue"),;
 
         private int code;
+        private String descricao;
     }
 
    // private List<ItemPedido> itens;

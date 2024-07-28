@@ -37,12 +37,13 @@ public class Prato extends ItemMenu {
     @Getter
     @AllArgsConstructor
     public enum Categoria {
-        ENTRADA(1),
-        PRATOPRINCIPAL(2),
-        SOBREMESA(3),
-        DRINK(4);
+        ENTRADA(1, "Entrada"),
+        PRATOPRINCIPAL(2, "Prato Principal"),
+        SOBREMESA(3, "Sobremesa"),
+        DRINK(4, "Drink");
 
         private int code;
+        private String nome;
     }
     
 }

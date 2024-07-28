@@ -33,14 +33,15 @@ public class HorarioFuncionamento {
     @Getter
     public enum DiasSemana {
 
-        DOMINGO(1),
-        SEGUNDA(2),
-        TERCA(3),
-        QUARTA(4),
-        QUINTA(5),
-        SEXTA(6),
-        SABADO(7);
+        DOMINGO(1, "Domingo"),
+        SEGUNDA(2, "Segunda"),
+        TERCA(3, "Terça"),
+        QUARTA(4, "Quarta"),
+        QUINTA(5, "Quinta"),
+        SEXTA(6, "Sexta"),
+        SABADO(7, "Sábado");
 
         private int code;
+        private String nomeDia; 
     }
 }
