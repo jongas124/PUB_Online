@@ -2,6 +2,7 @@ package com.PUB_Online.PUB.Models;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -58,4 +59,6 @@ public class Pedido {
 
         private int code;
     }
+
+   // private List<ItemPedido> itens;
 }
