@@ -30,7 +30,7 @@ public class ItemMenu {
     @Size(max=255)
     private String nome;
 
-    @Column(name = "preco", nullable = false)
+    @Column(name = "preco", nullable = false) //Considerar trocar float por double ou BigDecimal
     @NotBlank
     private float preco;
 }
