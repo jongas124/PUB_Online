@@ -18,6 +18,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class HorarioFuncionamento {
+    public static final String TABLE_NAME = "horario_funcionamento";
     
     @Id
     @Column(name = "dias_semana")

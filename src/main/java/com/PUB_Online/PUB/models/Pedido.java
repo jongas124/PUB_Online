@@ -8,7 +8,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,6 +27,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Pedido {
+    public static final String TABLE_NAME = "pedidos";
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true)

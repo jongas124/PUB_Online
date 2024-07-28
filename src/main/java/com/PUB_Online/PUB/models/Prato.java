@@ -20,6 +20,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class Prato extends ItemMenu {
+    public static final String TABLE_NAME = "pratos";
 
     @Column(name = "descricao", nullable = false, length = 255)
     @NotBlank
