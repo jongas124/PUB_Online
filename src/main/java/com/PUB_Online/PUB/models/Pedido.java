@@ -1,4 +1,4 @@
-package com.PUB_Online.PUB.Models;
+package com.PUB_Online.PUB.models;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -38,11 +38,11 @@ public class Pedido {
     @Column(name = "hora", updatable = false)
     private LocalTime hora;
 
-    @Column(name = "preco")
+    @Column(name = "preco", nullable = false) //considerar trocar float por double ou BigDecimal
     @NotNull
     private float preco;
 
-    @Column(name = "comanda") //Era pra preparar o link pra comanda, mas não acho q carregar ela seja uma boa
+    @Column(name = "comanda", nullable = false) //Era pra preparar o link pra comanda, mas não acho q carregar ela seja uma boa
     @NotNull
     private int numeroComanda;
 

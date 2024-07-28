@@ -1,4 +1,4 @@
-package com.PUB_Online.PUB.Models;
+package com.PUB_Online.PUB.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
@@ -19,7 +19,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @EqualsAndHashCode
 @MappedSuperclass
-public abstract class ItemMenu {
+public class ItemMenu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true)
@@ -30,7 +30,7 @@ public abstract class ItemMenu {
     @Size(max=255)
     private String nome;
 
-    @Column(name = "preco", nullable = false)
+    @Column(name = "preco", nullable = false) //Considerar trocar float por double ou BigDecimal
     @NotBlank
     private float preco;
 }
