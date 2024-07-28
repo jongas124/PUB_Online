@@ -17,34 +17,29 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Table(name="comandas")
+@Table(name="reservas")
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Comanda {
-    public static final String TABLE_NAME = "comandas";
+public class Reserva {
+    public static final String TABLE_NAME = "reservas";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "numero", unique = true)
     private Long numero;
     
-    @CreationTimestamp
-    @Column(name = "data", updatable = false)
+    @Column(name = "dataReserva")
     private LocalDate data;
 
-    @CreationTimestamp
-    @Column(name = "horaAberturaComanda", updatable = false)
-    private LocalTime horaAberturaComanda;
-    
-    @Column(name = "horaFechamentoComanda")
-    private LocalTime horaFechamentoComanda;
+    @Column(name = "horaReserva")
+    private LocalTime horaAberturaReser;
 
-    @Column(name = "valorTotal", nullable = false) //considerar trocar float por double ou BigDecimal
+    @Column(name = "cpfCliente", nullable = false)
     @NotNull
-    private float valorTotal;
+    private Cliente cliente;
 
 }
 
