@@ -27,6 +27,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Pedido {
+    public static final String TABLE_NAME = "pedidos";
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true)

@@ -19,6 +19,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class Bebida extends ItemMenu{
+    public static final String TABLE_NAME = "bebidas";
     
     @Column(name = "tamanho", nullable = false)
     @NotBlank

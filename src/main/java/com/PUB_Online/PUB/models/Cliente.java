@@ -27,8 +27,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode
-public class Garcom {
-    public static final String TABLE_NAME = "garcons";
+public class Cliente {
+    public static final String TABLE_NAME = "clientes";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,14 +45,14 @@ public class Garcom {
     private String cpf;
 
     @ElementCollection
-    @CollectionTable(name = "garcom_telefones")
+    @CollectionTable(name = "cliente_telefones")
     @Column(name = "telefone")
     private List<String> telefone;
 
-    @Column(name = "username", length = 100, unique = true, nullable = false, updatable = false)
+    @Column(name = "email", length = 100, unique = true, nullable = false, updatable = false)
     @NotBlank
-    @Size(min = 4, max = 64)
-    private String username;
+    @Size(min = 8, max = 64)
+    private String email;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) 
     @Column(name = "password", length = 127, nullable = false)
