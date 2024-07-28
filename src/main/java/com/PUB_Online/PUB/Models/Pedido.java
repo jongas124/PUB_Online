@@ -1,4 +1,4 @@
-package com.PUB_Online.PUB.models;
+package com.PUB_Online.PUB.Models;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

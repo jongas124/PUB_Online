@@ -1,4 +1,4 @@
-package com.PUB_Online.PUB.models;
+package com.PUB_Online.PUB.Models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
