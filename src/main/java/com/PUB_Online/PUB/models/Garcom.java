@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -44,6 +45,7 @@ public class Garcom {
     private String cpf;
 
     @ElementCollection
+    @CollectionTable(name = "garcom_telefones")
     @Column(name = "telefone")
     private List<String> telefone;
 
