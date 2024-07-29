@@ -1,28 +1,27 @@
 package com.PUB_Online.PUB.models;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
 @Entity
 @Table(name = "mesa")
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
+@Data
 public class Mesa {
     public static final String TABLE_NAME = "mesas";
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column (name = "numero", unique = true)
     private int numero;
 
@@ -30,18 +29,11 @@ public class Mesa {
     @NotNull
     private int capacidade;
 
-    @Column(name = "status", nullable = false)
-    @NotNull
-    private Status status;
-    
-    @Getter
-    @AllArgsConstructor
-    public enum Status {
-        LIVRE(1, "Reservada"),
-        RESERVADA(2, "Livre"),
-        OCUPADA(3, "Ocupada"),;
+    @OneToMany(mappedBy = "mesa", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Reserva> reservas = new ArrayList<Reserva>();
 
-        private int code;
-        private String descricao;
-    }
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "comanda_numero", referencedColumnName = "numero")
+    private Comanda comanda;
+
 }

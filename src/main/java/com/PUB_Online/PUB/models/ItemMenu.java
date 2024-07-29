@@ -9,22 +9,16 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode
 @Entity
-@Table(name = "item_menu")
+@Table(name = "itens_menu")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Data
 public abstract class ItemMenu {
+
+    public static final String TABLE_NAME = "itens_menu";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true)
@@ -32,7 +26,6 @@ public abstract class ItemMenu {
 
     @Column(name = "nome", nullable = false)
     @NotBlank
-    @Size(max=255)
     private String nome;
 
     @Column(name = "preco", nullable = false) //Considerar trocar float por double ou BigDecimal

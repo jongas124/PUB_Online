@@ -1,63 +1,58 @@
 package com.PUB_Online.PUB.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
 @Entity
-@Table(name = "garcons")
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
+@Table(name = "clientes")
+@Data
 public class Cliente {
     public static final String TABLE_NAME = "clientes";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column (name = "id", unique = true)
-    private Long id;
+    @Column(name = "cpf", length = 12, unique = true, updatable = false, nullable = false)
+    @NotBlank
+    @Size(min = 11, max = 11)
+    private String cpf;
 
     @Column(name = "nome", nullable = false)
     @NotBlank
-    @Size(max = 255)
     private String nome;
-
-    @Column(name = "cpf", length = 12, unique = true, nullable = false, updatable = false)
-    @NotBlank
-    private String cpf;
 
     @ElementCollection
     @CollectionTable(name = "cliente_telefones")
-    @Column(name = "telefone")
-    private List<String> telefone;
+    private List<String> telefone = new ArrayList<String>();
 
-    @Column(name = "email", length = 100, unique = true, nullable = false, updatable = false)
+    @Column(name = "email", unique = true, nullable = false, updatable = false)
     @NotBlank
-    @Size(min = 8, max = 64)
+    @Size(min = 5)
     private String email;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) 
     @Column(name = "password", length = 127, nullable = false)
     @NotBlank
-    @Size(min = 8, max = 100)
+    @Size(min = 8, max = 120)
     private String password;
+
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Reserva> reservas = new ArrayList<Reserva>();
+
+    @OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER)
+    private List<Pedido> pedidos = new ArrayList<Pedido>();
 
 }

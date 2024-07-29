@@ -2,27 +2,26 @@ package com.PUB_Online.PUB.models;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-@Table(name="comandas")
 @Entity
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Table(name="comandas")
+@Data
 public class Comanda {
     public static final String TABLE_NAME = "comandas";
 
@@ -36,15 +35,23 @@ public class Comanda {
     private LocalDate data;
 
     @CreationTimestamp
-    @Column(name = "horaAberturaComanda", updatable = false)
+    @Column(name = "hora_abertura_comanda", updatable = false)
     private LocalTime horaAberturaComanda;
     
-    @Column(name = "horaFechamentoComanda")
+    @Column(name = "hora_fechamento_comanda", updatable = false)
     private LocalTime horaFechamentoComanda;
 
-    @Column(name = "valorTotal", nullable = false) //considerar trocar float por double ou BigDecimal
+    @Column(name = "valor_Total", nullable = false) //considerar trocar float por double ou BigDecimal
     @NotNull
     private float valorTotal;
+
+    @OneToOne(mappedBy = "comanda")
+    @NotNull
+    // @JoinColumn(name = "mesa_numero", referencedColumnName = "numero", nullable = false)
+    private Mesa mesa;
+
+    @OneToMany(mappedBy = "comanda", fetch = FetchType.EAGER)
+    private List<Pedido> pedidos = new ArrayList<Pedido>();
 
 }
 

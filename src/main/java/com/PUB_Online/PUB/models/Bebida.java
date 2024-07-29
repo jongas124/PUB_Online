@@ -5,21 +5,14 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@DiscriminatorValue("Bebida")
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@DiscriminatorValue("bebida")
+@Data
+@EqualsAndHashCode(callSuper=false)
 public class Bebida extends ItemMenu{
-    public static final String TABLE_NAME = "bebidas";
     
     @Column(name = "tamanho", nullable = false)
     @NotBlank

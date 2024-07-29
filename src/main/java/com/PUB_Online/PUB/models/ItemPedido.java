@@ -7,28 +7,25 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
-@Table(name = "item_pedido")
+@Table(name = "itens_pedido")
+@Data
 public class ItemPedido {
+
+    public static final String TABLE_NAME = "itens_pedido";
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "item_menu_id")
+    @JoinColumn(name = "itens_menu_id", nullable = false, referencedColumnName = "id")
     @NotNull
     public ItemMenu itemMenu;
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "pedido_id")
+    @JoinColumn(name = "pedido_id", referencedColumnName = "id", nullable = false)
+    @NotNull
     public Pedido pedido;
 
     @Column(name = "quantidade")

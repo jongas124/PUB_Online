@@ -7,22 +7,18 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 
 @Entity
-@DiscriminatorValue("Prato")
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@DiscriminatorValue("prato")
+@Data
 @EqualsAndHashCode(callSuper = false)
 public class Prato extends ItemMenu {
-    public static final String TABLE_NAME = "pratos";
 
-    @Column(name = "descricao", nullable = false, length = 255)
+    @Column(name = "descricao", nullable = false)
     @NotBlank
     @Size(min = 10, max = 250)
     private String descricao;

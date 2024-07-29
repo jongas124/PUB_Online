@@ -8,19 +8,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-@Table(name="reservas")
 @Entity
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Table(name="reservas")
+@Data
 public class Reserva {
     public static final String TABLE_NAME = "reservas";
 
@@ -29,16 +25,25 @@ public class Reserva {
     @Column(name = "numero", unique = true)
     private Long numero;
     
-    @Column(name = "dataReserva")
+    @Column(name = "data_reserva", nullable = false, updatable = false)
     private LocalDate data;
 
-    @Column(name = "horaReserva")
+    @Column(name = "hora_reserva", nullable = false, updatable = false)
     private LocalTime horaAberturaReser;
 
-    @Column(name = "cpfCliente", nullable = false)
+    @Column(name = "numero_pessoas", nullable = false, updatable = false)
+    private int numeroPessoas;
+
+    @ManyToOne
+    @JoinColumn(name = "cliente_cpf", nullable = false, updatable = false, referencedColumnName = "cpf")
     @NotNull
     private Cliente cliente;
 
+    @ManyToOne
+    @JoinColumn(name = "mesa_numero", nullable = false, updatable = false, referencedColumnName = "numero")
+    @NotNull
+    private Mesa mesa;
+    
 }
 
 
