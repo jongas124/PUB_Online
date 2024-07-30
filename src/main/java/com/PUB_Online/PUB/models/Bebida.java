@@ -18,7 +18,7 @@ public class Bebida extends ItemMenu{
     @NotBlank
     private String tamanho;
 
-    @Column(name = "quantidade", nullable = false)
+    @Column(name = "estoque", nullable = false)
     @NotNull
     private int quantidadeEstoque;
 }
