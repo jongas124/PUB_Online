@@ -23,7 +23,7 @@ public class Mesa {
     
     @Id
     @Column (name = "numero", unique = true)
-    private int numero;
+    private Long numero;
 
     @Column(name = "capacidade", nullable = false)
     @NotNull
