@@ -33,7 +33,7 @@ public class Garcom {
 
     @ElementCollection
     @CollectionTable(name = "garcom_telefones")
-    private List<String> telefone = new ArrayList<String>();
+    private List<String> telefones = new ArrayList<String>();
 
     @Column(name = "username", length = 65, unique = true, nullable = false, updatable = false)
     @NotBlank
@@ -41,7 +41,7 @@ public class Garcom {
     private String username;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) 
-    @Column(name = "password", length = 101, nullable = false)
+    @Column(name = "password", length = 121, nullable = false)
     @NotBlank
     @Size(min = 8, max = 120)
     private String password;

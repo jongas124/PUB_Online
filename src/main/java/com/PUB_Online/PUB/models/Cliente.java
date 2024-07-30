@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -36,7 +35,7 @@ public class Cliente {
 
     @ElementCollection
     @CollectionTable(name = "cliente_telefones")
-    private List<String> telefone = new ArrayList<String>();
+    private List<String> telefones = new ArrayList<String>();
 
     @Column(name = "email", unique = true, nullable = false, updatable = false)
     @NotBlank
@@ -49,7 +48,7 @@ public class Cliente {
     @Size(min = 8, max = 120)
     private String password;
 
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER)
     private List<Reserva> reservas = new ArrayList<Reserva>();
 
     @OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER)

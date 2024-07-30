@@ -50,12 +50,12 @@ public class Pedido {
     @NotNull
     private Status status;
     
-    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @NotNull
     private List<ItemPedido> itens = new ArrayList<ItemPedido>();
 
     @ManyToOne
-    @JoinColumn(name = "cliente_cpf", nullable = false, updatable = false, referencedColumnName = "cpf")
-    @NotNull
+    @JoinColumn(name = "cliente_cpf", updatable = false, referencedColumnName = "cpf")
     private Cliente cliente;
 
     @ManyToOne

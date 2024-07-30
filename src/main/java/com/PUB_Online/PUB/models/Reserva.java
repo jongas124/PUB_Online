@@ -26,10 +26,10 @@ public class Reserva {
     private Long numero;
     
     @Column(name = "data_reserva", nullable = false, updatable = false)
-    private LocalDate data;
+    private LocalDate dataReserva;
 
     @Column(name = "hora_reserva", nullable = false, updatable = false)
-    private LocalTime horaAberturaReser;
+    private LocalTime horaAberturaReserva;
 
     @Column(name = "numero_pessoas", nullable = false, updatable = false)
     private int numeroPessoas;
