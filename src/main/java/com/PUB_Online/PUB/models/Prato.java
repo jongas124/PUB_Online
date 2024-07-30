@@ -3,6 +3,8 @@ package com.PUB_Online.PUB.models;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -27,6 +29,7 @@ public class Prato extends ItemMenu {
 
     @Column(name = "categoria", nullable = false)
     @NotNull
+    @Enumerated(EnumType.STRING)
     private Categoria categoria;
     
     @Getter
