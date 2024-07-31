@@ -32,7 +32,7 @@ public class Mesa {
     @OneToMany(mappedBy = "mesa", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Reserva> reservas = new ArrayList<Reserva>();
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "comanda_numero", referencedColumnName = "numero")
     private Comanda comanda;
 

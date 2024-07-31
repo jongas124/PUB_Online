@@ -60,7 +60,7 @@ public class Pedido {
     @JoinColumn(name = "cliente_cpf", updatable = false, referencedColumnName = "cpf")
     private Cliente cliente;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "comanda_numero", nullable = false, updatable = false, referencedColumnName = "numero")
     @NotNull
     @Enumerated(EnumType.STRING)

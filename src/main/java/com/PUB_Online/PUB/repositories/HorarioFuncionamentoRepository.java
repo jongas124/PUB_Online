@@ -7,9 +7,4 @@ import com.PUB_Online.PUB.models.HorarioFuncionamento;
 import com.PUB_Online.PUB.models.HorarioFuncionamento.DiasSemana;
 
 @Repository
-public interface HorarioFuncionamentoRepository extends JpaRepository<HorarioFuncionamento, DiasSemana> {
-    HorarioFuncionamento findByDiaSemana(String diaSemana);
-    HorarioFuncionamento findByHorarioAbertura(String horarioAbertura);
-    HorarioFuncionamento findByHorarioFechamento(String horarioFechamento);
-    
-}
+public interface HorarioFuncionamentoRepository extends JpaRepository<HorarioFuncionamento, DiasSemana> {    }

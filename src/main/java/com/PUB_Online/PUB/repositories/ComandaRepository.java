@@ -7,7 +7,6 @@ import com.PUB_Online.PUB.models.Comanda;
 
 @Repository
 public interface ComandaRepository extends JpaRepository<Comanda, Long> {
-    Comanda findByMesaId(Long mesaId);
     Comanda findByNumero(Long numero);
     
 }

@@ -46,7 +46,7 @@ public class Comanda {
     @Column(name = "hora_fechamento_comanda", updatable = false)
     private LocalTime horaFechamentoComanda;
 
-    @OneToOne(mappedBy = "comanda")
+    @OneToOne(mappedBy = "comanda", optional = false)
     @NotNull
     // @JoinColumn(name = "mesa_numero", referencedColumnName = "numero", nullable = false)
     private Mesa mesa;

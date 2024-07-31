@@ -7,13 +7,13 @@ import org.springframework.stereotype.Component;
 import com.PUB_Online.PUB.exceptions.InvalidCPFException;
 
 @Component
-public class CPFValidator {
+public class CPFUtil {
 
     //valida CPFs no formato 000.000.000-00 ou 00000000000
     private static final String CPF_REGEX = "^(\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}|\\d{11})$";
 
     //verificar se o CPF é válido
-    public static boolean validador(String cpf) {
+    public static void validarCPF(String cpf) {
         if (!verificaFormato(cpf)) {
             throw new InvalidCPFException("Formato de CPF inválido.");
         }
@@ -37,8 +37,6 @@ public class CPFValidator {
 
             if(digitoVerificador1 != digitos[9] || digitoVerificador2 != digitos[10]) {
                 throw new InvalidCPFException("CPF inválido.");
-            } else {
-                return true;
             }
             
         } catch (NumberFormatException e) {
@@ -67,5 +65,11 @@ public class CPFValidator {
         } else {
             return digito;
         }
+    }
+
+        //formatar CPF
+    public static String formatarCPF(String cpf) {
+        cpf = cpf.replaceAll("[^0-9]", "");
+        return cpf.replaceAll("(\\d{3})(\\d{3})(\\d{3})(\\d{2})", "$1.$2.$3-$4");
     }
 }

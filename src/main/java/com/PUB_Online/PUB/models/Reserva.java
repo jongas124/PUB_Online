@@ -34,12 +34,12 @@ public class Reserva {
     @Column(name = "numero_pessoas", nullable = false, updatable = false)
     private int numeroPessoas;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "cliente_cpf", nullable = false, updatable = false, referencedColumnName = "cpf")
     @NotNull
     private Cliente cliente;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "mesa_numero", nullable = false, updatable = false, referencedColumnName = "numero")
     @NotNull
     private Mesa mesa;
