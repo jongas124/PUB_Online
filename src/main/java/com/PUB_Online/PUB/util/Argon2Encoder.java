@@ -1,9 +1,12 @@
 package com.PUB_Online.PUB.util;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 
+@Component
 public class Argon2Encoder implements PasswordEncoder{
     private Argon2 argon2 = Argon2Factory.create();
     private static final int ITERATIONS = 10;
