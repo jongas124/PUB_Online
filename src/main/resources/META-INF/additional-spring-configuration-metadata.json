@@ -1,0 +1,12 @@
+{"properties": [
+  {
+    "name": "jwt.public-key",
+    "type": "java.lang.String",
+    "description": "Caminho para a chave pública do que vamos usar no JWT"
+  },
+  {
+    "name": "jwt.private-key",
+    "type": "java.lang.String",
+    "description": "Caminho para a chave privada do que vamos usar no JWT"
+  }
+]}
