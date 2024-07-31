@@ -22,9 +22,9 @@ public class Garcom {
     public static final String TABLE_NAME = "garcons";
 
     @Id
-    @Column(name = "cpf", length = 12, unique = true, nullable = false, updatable = false)
+    @Column(name = "cpf", length = 16, unique = true, nullable = false, updatable = false)
     @NotBlank
-    @Size(min = 11, max = 11)
+    @Size(min = 11, max = 15)
     private String cpf;
 
     @Column(name = "nome", nullable = false)
