@@ -1,7 +1,9 @@
 package com.PUB_Online.PUB.models;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -35,7 +37,7 @@ public class Cliente {
 
     @ElementCollection
     @CollectionTable(name = "cliente_telefones")
-    private List<String> telefones = new ArrayList<String>();
+    private Set<String> telefones = new HashSet<String>();
 
     @Column(name = "email", unique = true, nullable = false, updatable = false)
     @NotBlank

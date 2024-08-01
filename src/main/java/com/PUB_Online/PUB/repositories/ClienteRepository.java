@@ -1,5 +1,6 @@
 package com.PUB_Online.PUB.repositories;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,5 +12,6 @@ import com.PUB_Online.PUB.models.Cliente;
 public interface ClienteRepository extends JpaRepository<Cliente, String> {
     Optional<Cliente> findByEmail(String email);
     Optional<Cliente> findByCpf(String cpf);
+    List<Cliente> findByNomeContaining(String nome);
     
 }

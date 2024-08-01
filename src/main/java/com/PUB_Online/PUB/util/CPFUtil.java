@@ -35,6 +35,8 @@ public class CPFUtil {
             int digitoVerificador1 = calculateDigit(digitos, 9);
             int digitoVerificador2 = calculateDigit(digitos, 10);
 
+            //verificar se os dígitos verificadores calculados são iguais aos informados
+            //se forem a função deixa de lançar a exceção e o CPF é considerado válido
             if(digitoVerificador1 != digitos[9] || digitoVerificador2 != digitos[10]) {
                 throw new InvalidCPFException("CPF inválido.");
             }
