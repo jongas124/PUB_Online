@@ -41,12 +41,16 @@ public class SecurityConfig {
     
     //todos os endpoints são públicos apenas temporiaramente para facilitar o desenvolvimento
     private static final String[] PUBLIC_MATCHERS = {
-            "/**"
+            "/"
     };
 
     private static final String[] PUBLIC_MATCHERS_POST = {
             "/cliente",
             "/login"
+    };
+
+    private static final String[] PUBLIC_MATCHERS_GET = {
+        "/menu"
     };
 
     @Bean
@@ -56,6 +60,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(PUBLIC_MATCHERS).permitAll()
                 .requestMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
+                .requestMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
                 .anyRequest().authenticated())
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

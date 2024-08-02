@@ -7,13 +7,16 @@ import javax.mail.internet.InternetAddress;
 
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import com.PUB_Online.PUB.models.Cliente;
 import com.PUB_Online.PUB.repositories.ClienteRepository;
 import com.PUB_Online.PUB.controllers.dtos.ClienteCreateDTO;
 import com.PUB_Online.PUB.controllers.dtos.ClienteUpdateDTO;
+import com.PUB_Online.PUB.controllers.dtos.LoginRequestDTO;
 import com.PUB_Online.PUB.exceptions.InvalidCPFException;
+import com.PUB_Online.PUB.exceptions.InvalidCredentialsException;
 import com.PUB_Online.PUB.exceptions.InvalidEmailException;
 import com.PUB_Online.PUB.exceptions.ObjectNotFoundException;
 import com.PUB_Online.PUB.util.Argon2Encoder;
@@ -50,6 +53,8 @@ public class ClienteService {
         //formatações
         obj.setCpf(CPFUtil.formatarCPF(obj.getCpf())); 
         obj.setTelefones(TelefoneUtil.formatarTelefones(obj.getTelefones(), "BR"));
+
+        //encode de senha
         obj.setPassword(argon2Encoder.encode(obj.getPassword()));
 
         return this.clienteRepository.save(obj);
@@ -57,6 +62,7 @@ public class ClienteService {
 
     public Cliente findByCpf(String cpf) {
         CPFUtil.validarCPF(cpf);
+        cpf = CPFUtil.formatarCPF(cpf);
         Optional<Cliente> cliente = this.clienteRepository.findByCpf(cpf);
         if(cliente.isPresent()) {
             return cliente.get();
@@ -91,6 +97,18 @@ public class ClienteService {
 
     }
 
+    public Cliente findByCpfOrEmail(String login) {
+        try {
+            return this.findByCpf(login);
+        } catch (Exception e) {
+            try {
+                return this.findByEmail(login);
+            } catch (Exception ex) {
+                throw new ObjectNotFoundException("Login inválido");
+            }
+        }
+    }
+
     public List<Cliente> findAllClientes() {
         List<Cliente> users = clienteRepository.findAll();
         return users;
@@ -102,23 +120,64 @@ public class ClienteService {
     }
 
     @Transactional
-    public Cliente update(Cliente obj) {
+    public Cliente update(Cliente obj, ClienteUpdateDTO update) {
         Cliente newobj = this.findByCpf(obj.getCpf());
-        newobj.setNome(obj.getNome());
-        newobj.setTelefones(TelefoneUtil.formatarTelefones(obj.getTelefones(), "BR"));
-        newobj.setPassword(argon2Encoder.encode(obj.getPassword()));
+        if (update.nome() != null){
+            newobj.setNome(update.nome());
+        }
+        if (update.password() != null){
+            PasswordValidator.validarSenha(update.password());
+            newobj.setPassword(argon2Encoder.encode(update.password()));
+        }
+        if (update.telefones() != null){
+            TelefoneUtil.validarTelefones(update.telefones(), "BR");
+            newobj.setTelefones(TelefoneUtil.formatarTelefones(update.telefones(), "BR"));
+        }
         return this.clienteRepository.save(newobj);
     }
 
-    public void deleteUser(String cpf) {
-        Cliente cliente = this.findByCpf(CPFUtil.formatarCPF(cpf));
+    @Transactional
+    public Cliente update(Cliente obj, LoginRequestDTO update) {
+        Cliente newobj = this.findByCpf(obj.getCpf());
+        newobj.setPassword(argon2Encoder.encode(update.password()));
+        return this.clienteRepository.save(newobj);
+    }
+
+    public void addTelefones(String cpf, Set<String> telefones) {
+        Cliente cliente = this.findByCpf(cpf);
+        TelefoneUtil.validarTelefones(telefones, "BR");
+        cliente.getTelefones().addAll(TelefoneUtil.formatarTelefones(telefones, "BR"));
+        this.clienteRepository.save(cliente);
+    }
+
+    public void deleteCliente(String cpf) {
+        Cliente cliente = this.findByCpf(cpf);
         this.clienteRepository.delete(cliente);
     }
 
-    public void deleteTelefones(String cpf, List<String> telefones) {
-        Cliente cliente = this.findByCpf(CPFUtil.formatarCPF(cpf));
-        cliente.getTelefones().removeAll(telefones);
+    public void deleteTelefones(String cpf, Set<String> telefones) {
+        Cliente cliente = this.findByCpf(cpf);
+        TelefoneUtil.validarTelefones(telefones, "BR");
+        cliente.getTelefones().removeAll(TelefoneUtil.formatarTelefones(telefones, "BR"));
         this.clienteRepository.save(cliente);
+    }
+
+    public boolean isLoginCorrect(LoginRequestDTO loginRequest, Cliente cliente) {
+        Argon2Encoder argon2Encoder = new Argon2Encoder();
+        if (argon2Encoder.matches(loginRequest.password(), cliente.getPassword())) {
+            return true;
+        } else {
+            throw new InvalidCredentialsException("Usuário ou senha incorreto(s)");
+        }
+    }
+
+        public void hasPermision(String login, JwtAuthenticationToken token) {
+        Cliente obj = this.findByCpfOrEmail(login);
+        if (obj.getCpf().equals(token.getName())) {
+            return;
+        } else {
+            throw new InvalidCredentialsException("Sem permissão para executar esta ação");
+        }
     }
 
     public Cliente fromDTO(@Valid ClienteCreateDTO obj) {
@@ -128,14 +187,6 @@ public class ClienteService {
         cliente.setEmail(obj.email());
         cliente.setNome(obj.nome());
         cliente.setPassword(obj.password());
-        return cliente;
-    }
-    
-    public Cliente fromDTO(@Valid ClienteUpdateDTO obj) {
-        Cliente cliente = new Cliente();
-        cliente.setNome(obj.nome());
-        cliente.setPassword(obj.password());
-        cliente.setTelefones(obj.telefones());
         return cliente;
     }
 
