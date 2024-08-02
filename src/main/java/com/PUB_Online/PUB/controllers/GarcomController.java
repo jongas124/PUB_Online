@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.PUB_Online.PUB.controllers.dtos.ClienteCreateDTO;
-import com.PUB_Online.PUB.controllers.dtos.ClienteUpdateDTO;
-import com.PUB_Online.PUB.models.Cliente;
-import com.PUB_Online.PUB.services.ClienteService;
+import com.PUB_Online.PUB.controllers.dtos.GarcomCreateDTO;
+import com.PUB_Online.PUB.controllers.dtos.GarcomUpdateDTO;
+import com.PUB_Online.PUB.models.Garcom;
+import com.PUB_Online.PUB.services.GarcomService;
 
 import jakarta.validation.Valid;
 
@@ -29,80 +29,80 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 @RestController
-@RequestMapping("/cliente")
+@RequestMapping("/garcom")
 @Validated
 @EnableMethodSecurity
-public class ClienteController {
+public class GarcomController {
     
     @Autowired
-    ClienteService clienteService;
+    GarcomService garcomService;
     
     @PostMapping
-    public ResponseEntity<Void> create(@Valid @RequestBody ClienteCreateDTO obj) {
-        Cliente cliente = this.clienteService.fromDTO(obj);
-        Cliente newCliente = this.clienteService.create(cliente);
+    public ResponseEntity<Void> create(@Valid @RequestBody GarcomCreateDTO obj) {
+        Garcom garcom = this.garcomService.fromDTO(obj);
+        Garcom newGarcom = this.garcomService.create(garcom);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{cpf}").buildAndExpand(newCliente.getCpf()).toUri();
+                .path("/{cpf}").buildAndExpand(newGarcom.getCpf()).toUri();
         return ResponseEntity.created(uri).build();
     }
 
     @GetMapping("/{login}")
-    public ResponseEntity<Cliente> findByCpf(@PathVariable String login, JwtAuthenticationToken token) {
-        clienteService.hasPermision(login, token);
-        Cliente obj = this.clienteService.findByCpfOrEmail(login);
+    public ResponseEntity<Garcom> findByCpf(@PathVariable String login, JwtAuthenticationToken token) {
+        garcomService.hasPermision(login, token);
+        Garcom obj = this.garcomService.findByCpfOrUsername(login);
         return ResponseEntity.ok().body(obj);
     }
 
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @GetMapping("/nome/{nome}")
-    public ResponseEntity<List<Cliente>> findByNome(@PathVariable String nome, JwtAuthenticationToken token) {
-        List<Cliente> obj = this.clienteService.findByNome(nome);
+    public ResponseEntity<List<Garcom>> findByNome(@PathVariable String nome, JwtAuthenticationToken token) {
+        List<Garcom> obj = this.garcomService.findByNome(nome);
         return ResponseEntity.ok().body(obj);
     }
 
     @GetMapping("/telefone/{login}")
     public ResponseEntity<Set<String>> findTelefone(@PathVariable String login, JwtAuthenticationToken token) {
-        clienteService.hasPermision(login, token);
-        Cliente obj = this.clienteService.findByCpfOrEmail(login);
+        garcomService.hasPermision(login, token);
+        Garcom obj = this.garcomService.findByCpfOrUsername(login);
         return ResponseEntity.ok().body(obj.getTelefones());
     }
 
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @GetMapping("/all")
-    public ResponseEntity<List<Cliente>> findAll(JwtAuthenticationToken token) {
-        List<Cliente> list = this.clienteService.findAllClientes();
+    public ResponseEntity<List<Garcom>> findAll(JwtAuthenticationToken token) {
+        List<Garcom> list = this.garcomService.findAllGarcoms();
         return ResponseEntity.ok().body(list);
     }
 
     @PutMapping("/{login}")
-    public ResponseEntity<Cliente> update(@PathVariable String login, @RequestBody ClienteUpdateDTO newCliente, JwtAuthenticationToken token) {
-        clienteService.hasPermision(login, token);
-        Cliente obj = this.clienteService.findByCpfOrEmail(login);
-        this.clienteService.update(obj, newCliente);
+    public ResponseEntity<Garcom> update(@PathVariable String login, @RequestBody GarcomUpdateDTO newGarcom, JwtAuthenticationToken token) {
+        garcomService.hasPermision(login, token);
+        Garcom obj = this.garcomService.findByCpfOrUsername(login);
+        this.garcomService.update(obj, newGarcom);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("telefone/{login}")
-    public ResponseEntity<Cliente> updateTelefone(@PathVariable String login, @RequestBody Set<String> telefones, JwtAuthenticationToken token) {
-        clienteService.hasPermision(login, token);
-        Cliente obj = this.clienteService.findByCpfOrEmail(login);
-        this.clienteService.addTelefones(obj.getCpf(), telefones);
+    public ResponseEntity<Garcom> updateTelefone(@PathVariable String login, @RequestBody Set<String> telefones, JwtAuthenticationToken token) {
+        garcomService.hasPermision(login, token);
+        Garcom obj = this.garcomService.findByCpfOrUsername(login);
+        this.garcomService.addTelefones(obj.getCpf(), telefones);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{login}")
     public ResponseEntity<Void> delete(@PathVariable String login, JwtAuthenticationToken token) {
-        clienteService.hasPermision(login, token);
-        Cliente obj = this.clienteService.findByCpfOrEmail(login);
-        this.clienteService.deleteCliente(obj.getCpf());
+        garcomService.hasPermision(login, token);
+        Garcom obj = this.garcomService.findByCpfOrUsername(login);
+        this.garcomService.deleteGarcom(obj.getCpf());
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/telefone/{login}")
     public ResponseEntity<Void> deleteTelefone(@PathVariable String login, @RequestBody Set<String> telefones, JwtAuthenticationToken token) {
-        clienteService.hasPermision(login, token);
-        Cliente obj = this.clienteService.findByCpfOrEmail(login);
-        this.clienteService.deleteTelefones(obj.getCpf(), telefones);
+        garcomService.hasPermision(login, token);
+        Garcom obj = this.garcomService.findByCpfOrUsername(login);
+        this.garcomService.deleteTelefones(obj.getCpf(), telefones);
         return ResponseEntity.noContent().build();
     }
         

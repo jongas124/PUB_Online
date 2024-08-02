@@ -3,26 +3,25 @@ package com.PUB_Online.PUB.services;
 import java.util.List;
 import java.util.Optional;
 
-import javax.mail.internet.InternetAddress;
 
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
-import com.PUB_Online.PUB.models.Cliente;
-import com.PUB_Online.PUB.repositories.ClienteRepository;
-import com.PUB_Online.PUB.controllers.dtos.ClienteCreateDTO;
-import com.PUB_Online.PUB.controllers.dtos.ClienteUpdateDTO;
+import com.PUB_Online.PUB.models.Garcom;
+import com.PUB_Online.PUB.models.Garcom.Role;
+import com.PUB_Online.PUB.repositories.GarcomRepository;
+import com.PUB_Online.PUB.controllers.dtos.GarcomCreateDTO;
+import com.PUB_Online.PUB.controllers.dtos.GarcomUpdateDTO;
 import com.PUB_Online.PUB.controllers.dtos.LoginRequestDTO;
 import com.PUB_Online.PUB.exceptions.InvalidCPFException;
 import com.PUB_Online.PUB.exceptions.InvalidCredentialsException;
-import com.PUB_Online.PUB.exceptions.InvalidEmailException;
+import com.PUB_Online.PUB.exceptions.InvalidUsernameException;
 import com.PUB_Online.PUB.exceptions.ObjectNotFoundException;
 import com.PUB_Online.PUB.exceptions.PermissionException;
 import com.PUB_Online.PUB.util.Argon2Encoder;
 import com.PUB_Online.PUB.util.CPFUtil;
-import com.PUB_Online.PUB.util.EmailValidator;
 import com.PUB_Online.PUB.util.PasswordValidator;
 import com.PUB_Online.PUB.util.TelefoneUtil;
 
@@ -31,25 +30,27 @@ import jakarta.validation.Valid;
 
 
 @Service
-public class ClienteService {
+public class GarcomService {
     
     @Autowired
-    private ClienteRepository clienteRepository;
+    private GarcomRepository garcomRepository;
 
     @Autowired
     private Argon2Encoder argon2Encoder;
 
     @Transactional
-    public Cliente create(Cliente obj) {
-        if(this.clienteRepository.findByCpf(CPFUtil.formatarCPF(obj.getCpf())).isPresent()) {
+    public Garcom create(Garcom obj) {
+        if(this.garcomRepository.findByCpf(CPFUtil.formatarCPF(obj.getCpf())).isPresent()) {
             throw new InvalidCPFException("CPF em uso");
         }
 
         //validações
         CPFUtil.validarCPF(obj.getCpf());
-        EmailValidator.validarEmail(obj.getEmail());
         PasswordValidator.validarSenha(obj.getPassword());
         TelefoneUtil.validarTelefones(obj.getTelefones(), "BR");
+        if(obj.getUsername().contains("@")) {
+            throw new InvalidUsernameException("Username não pode conter '@'");
+        }
 
         //formatações
         obj.setCpf(CPFUtil.formatarCPF(obj.getCpf())); 
@@ -58,71 +59,69 @@ public class ClienteService {
         //encode de senha
         obj.setPassword(argon2Encoder.encode(obj.getPassword()));
 
-        return this.clienteRepository.save(obj);
+        obj.setRole(Role.GARCOM);
+
+        return this.garcomRepository.save(obj);
     }
 
-    public Cliente findByCpf(String cpf) {
+    public Garcom findByCpf(String cpf) {
         CPFUtil.validarCPF(cpf);
         cpf = CPFUtil.formatarCPF(cpf);
-        Optional<Cliente> cliente = this.clienteRepository.findByCpf(cpf);
-        if(cliente.isPresent()) {
-            return cliente.get();
+        Optional<Garcom> garcom = this.garcomRepository.findByCpf(cpf);
+        if(garcom.isPresent()) {
+            return garcom.get();
         } else {
             throw new ObjectNotFoundException("Usuário com o cpf: " + cpf + "não encontrado");
         }
     }
 
-    public Cliente findByEmail(String email) {
-        try {
-            InternetAddress emailAddrress = new InternetAddress(email);
-            emailAddrress.validate();
-        } catch (Exception e) {
-            throw new InvalidEmailException("Email inválido");
+    public Garcom findByUsername(String username) {
+        if(username.contains("@")) {
+            throw new InvalidUsernameException("Username não pode conter '@'");
         }
-
-        Optional<Cliente> cliente = this.clienteRepository.findByEmail(email);
-        if(cliente.isPresent()) {
-            return cliente.get();
+        Optional<Garcom> garcom = this.garcomRepository.findByUsername(username);
+        if(garcom.isPresent()) {
+            return garcom.get();
         } else {
-            throw new ObjectNotFoundException("Usuário com o email: " + email + "não encontrado");
+            throw new ObjectNotFoundException("Usuário com o username: " + username + "não encontrado");
         }
     }
 
-    public List<Cliente> findByNome(String nome) {
-        List<Cliente> cliente = this.clienteRepository.findByNomeContaining(nome);
-        if(cliente.size() > 0) {
-            return cliente;
+    public List<Garcom> findByNome(String nome) {
+        List<Garcom> garcom = this.garcomRepository.findByNomeContaining(nome);
+        if(garcom.size() > 0) {
+            return garcom;
         } else {
-            throw new ObjectNotFoundException("Cliente não encontrado");
+            throw new ObjectNotFoundException("Garcom não encontrado");
         }
 
     }
 
-    public Cliente findByCpfOrEmail(String login) {
+    public Garcom findByCpfOrUsername(String login) {
         try {
             return this.findByCpf(login);
         } catch (Exception e) {
             try {
-                return this.findByEmail(login);
+                return this.findByUsername(login);
             } catch (Exception ex) {
                 throw new ObjectNotFoundException("Login inválido");
             }
         }
     }
 
-    public List<Cliente> findAllClientes() {
-        List<Cliente> users = clienteRepository.findAll();
+    public List<Garcom> findAllGarcoms() {
+        List<Garcom> users = garcomRepository.findAll();
         return users;
     }
 
     public Set<String> findTelefones(String cpf) {
-        Cliente cliente = this.findByCpf(CPFUtil.formatarCPF(cpf));
-        return cliente.getTelefones();
+        Garcom garcom = this.findByCpf(CPFUtil.formatarCPF(cpf));
+        return garcom.getTelefones();
     }
 
     @Transactional
-    public Cliente update(Cliente obj, ClienteUpdateDTO update) {
-        Cliente newobj = this.findByCpf(obj.getCpf());
+    public Garcom update(Garcom obj, GarcomUpdateDTO update) {
+        Garcom newobj = this.findByCpf(obj.getCpf());
         if (update.nome() != null){
             newobj.setNome(update.nome());
         }
@@ -134,38 +133,38 @@ public class ClienteService {
             TelefoneUtil.validarTelefones(update.telefones(), "BR");
             newobj.setTelefones(TelefoneUtil.formatarTelefones(update.telefones(), "BR"));
         }
-        return this.clienteRepository.save(newobj);
+        return this.garcomRepository.save(newobj);
     }
 
     @Transactional
-    public Cliente update(Cliente obj, LoginRequestDTO update) {
-        Cliente newobj = this.findByCpf(obj.getCpf());
+    public Garcom update(Garcom obj, LoginRequestDTO update) {
+        Garcom newobj = this.findByCpf(obj.getCpf());
         newobj.setPassword(argon2Encoder.encode(update.password()));
-        return this.clienteRepository.save(newobj);
+        return this.garcomRepository.save(newobj);
     }
 
     public void addTelefones(String cpf, Set<String> telefones) {
-        Cliente cliente = this.findByCpf(cpf);
+        Garcom garcom = this.findByCpf(cpf);
         TelefoneUtil.validarTelefones(telefones, "BR");
-        cliente.getTelefones().addAll(TelefoneUtil.formatarTelefones(telefones, "BR"));
-        this.clienteRepository.save(cliente);
+        garcom.getTelefones().addAll(TelefoneUtil.formatarTelefones(telefones, "BR"));
+        this.garcomRepository.save(garcom);
     }
 
-    public void deleteCliente(String cpf) {
-        Cliente cliente = this.findByCpf(cpf);
-        this.clienteRepository.delete(cliente);
+    public void deleteGarcom(String cpf) {
+        Garcom garcom = this.findByCpf(cpf);
+        this.garcomRepository.delete(garcom);
     }
 
     public void deleteTelefones(String cpf, Set<String> telefones) {
-        Cliente cliente = this.findByCpf(cpf);
+        Garcom garcom = this.findByCpf(cpf);
         TelefoneUtil.validarTelefones(telefones, "BR");
-        cliente.getTelefones().removeAll(TelefoneUtil.formatarTelefones(telefones, "BR"));
-        this.clienteRepository.save(cliente);
+        garcom.getTelefones().removeAll(TelefoneUtil.formatarTelefones(telefones, "BR"));
+        this.garcomRepository.save(garcom);
     }
 
-    public boolean isLoginCorrect(LoginRequestDTO loginRequest, Cliente cliente) {
+    public boolean isLoginCorrect(LoginRequestDTO loginRequest, Garcom garcom) {
         Argon2Encoder argon2Encoder = new Argon2Encoder();
-        if (argon2Encoder.matches(loginRequest.password(), cliente.getPassword())) {
+        if (argon2Encoder.matches(loginRequest.password(), garcom.getPassword())) {
             return true;
         } else {
             throw new InvalidCredentialsException("Usuário ou senha incorreto(s)");
@@ -173,7 +172,8 @@ public class ClienteService {
     }
 
     public void hasPermision(String login, JwtAuthenticationToken token) {
-        Cliente obj = this.findByCpfOrEmail(login);
+        Garcom obj = this.findByCpfOrUsername(login);
+        //TODO: verificar se funciona
         if (obj.getCpf().equals(token.getName()) || token.getAuthorities().toString().contains("SCOPE_ADMIN")) {
             return;
         } else {
@@ -181,14 +181,15 @@ public class ClienteService {
         }
     }
 
-    public Cliente fromDTO(@Valid ClienteCreateDTO obj) {
-        Cliente cliente = new Cliente();
-        cliente.setTelefones(obj.telefones());
-        cliente.setCpf(obj.cpf());
-        cliente.setEmail(obj.email());
-        cliente.setNome(obj.nome());
-        cliente.setPassword(obj.password());
-        return cliente;
+    public Garcom fromDTO(@Valid GarcomCreateDTO obj) {
+        Garcom garcom = new Garcom();
+        garcom.setTelefones(obj.telefones());
+        garcom.setCpf(obj.cpf());
+        garcom.setUsername(obj.username());
+        garcom.setNome(obj.nome());
+        garcom.setPassword(obj.password());
+        garcom.setRole(Role.GARCOM);
+        return garcom;
     }
 
 }

@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.PUB_Online.PUB.controllers.dtos.LoginRequestDTO;
 import com.PUB_Online.PUB.controllers.dtos.LoginResponseDTO;
 import com.PUB_Online.PUB.models.Cliente;
+import com.PUB_Online.PUB.models.Garcom;
 import com.PUB_Online.PUB.services.ClienteService;
+import com.PUB_Online.PUB.services.GarcomService;
 import com.PUB_Online.PUB.util.Argon2Encoder;
 
 import lombok.AllArgsConstructor;
@@ -31,13 +33,15 @@ public class TokenController {
     @Autowired
     private ClienteService clienteService;
 
+    @Autowired
+    private GarcomService garcomService;
+
     @PostMapping
     public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequest) {
-        Cliente cliente = this.clienteService.findByEmail(loginRequest.login());
-    
-        if (cliente == null) {
+        if (!loginRequest.login().contains("@")) {
             return this.loginGarcom(loginRequest);
         }
+        Cliente cliente = this.clienteService.findByEmail(loginRequest.login());
 
         clienteService.isLoginCorrect(loginRequest, cliente);
 
@@ -66,7 +70,34 @@ public class TokenController {
 
     //desconsiderar, temporário
     public ResponseEntity<LoginResponseDTO> loginGarcom(LoginRequestDTO loginRequest) {
-        return ResponseEntity.ok(new LoginResponseDTO("token", 3000L));
+        Garcom garcom = this.garcomService.findByCpfOrUsername(loginRequest.login());
+
+        garcomService.isLoginCorrect(loginRequest, garcom);
+
+        Argon2Encoder argon2Encoder = new Argon2Encoder();
+
+        //verifica se a senha precisa ser recriptografada
+        if (argon2Encoder.upgradeEncoding(garcom.getPassword())) {
+            garcom.setPassword(argon2Encoder.encode(loginRequest.password()));
+            this.garcomService.update(garcom, loginRequest);
+        }
+
+        Instant now = Instant.now();
+        Long expiresIn = 3000L; // 3000 segundos: 50 minutos
+
+        String scope = garcom.getRole().toString();
+
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+            .issuer("PUB_Online")
+            .subject(garcom.getCpf().toString())
+            .issuedAt(now)
+            .expiresAt(now.plusSeconds(expiresIn))
+            .claim("scope", scope)
+            .build();
+
+        String jwtValue = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+
+        return ResponseEntity.ok(new LoginResponseDTO(jwtValue, expiresIn));
     }
 
 }

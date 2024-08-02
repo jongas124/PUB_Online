@@ -58,7 +58,7 @@ public class Garcom {
     @AllArgsConstructor
     public enum Role {
         ADMIN(1, "Admin"),
-        CLIENTE(2, "Garcom");
+        GARCOM(2, "Garcom");
 
         private int code;
         private String descricao;
