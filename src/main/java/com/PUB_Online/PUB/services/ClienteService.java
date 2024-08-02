@@ -19,6 +19,7 @@ import com.PUB_Online.PUB.exceptions.InvalidCPFException;
 import com.PUB_Online.PUB.exceptions.InvalidCredentialsException;
 import com.PUB_Online.PUB.exceptions.InvalidEmailException;
 import com.PUB_Online.PUB.exceptions.ObjectNotFoundException;
+import com.PUB_Online.PUB.exceptions.PermissionException;
 import com.PUB_Online.PUB.util.Argon2Encoder;
 import com.PUB_Online.PUB.util.CPFUtil;
 import com.PUB_Online.PUB.util.EmailValidator;
@@ -176,7 +177,7 @@ public class ClienteService {
         if (obj.getCpf().equals(token.getName())) {
             return;
         } else {
-            throw new InvalidCredentialsException("Sem permissão para executar esta ação");
+            throw new PermissionException("Sem permissão para executar esta ação");
         }
     }
 
