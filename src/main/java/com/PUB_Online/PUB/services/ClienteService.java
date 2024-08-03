@@ -15,7 +15,7 @@ import com.PUB_Online.PUB.repositories.ClienteRepository;
 import com.PUB_Online.PUB.controllers.dtos.ClienteCreateDTO;
 import com.PUB_Online.PUB.controllers.dtos.ClienteUpdateDTO;
 import com.PUB_Online.PUB.controllers.dtos.LoginRequestDTO;
-import com.PUB_Online.PUB.exceptions.InvalidCPFException;
+import com.PUB_Online.PUB.exceptions.DuplicatedValueException;
 import com.PUB_Online.PUB.exceptions.InvalidCredentialsException;
 import com.PUB_Online.PUB.exceptions.InvalidEmailException;
 import com.PUB_Online.PUB.exceptions.ObjectNotFoundException;
@@ -42,7 +42,7 @@ public class ClienteService {
     @Transactional
     public Cliente create(Cliente obj) {
         if(this.clienteRepository.findByCpf(CPFUtil.formatarCPF(obj.getCpf())).isPresent()) {
-            throw new InvalidCPFException("CPF em uso");
+            throw new DuplicatedValueException("CPF em uso");
         }
 
         //validações
@@ -171,7 +171,7 @@ public class ClienteService {
             throw new InvalidCredentialsException("Usuário ou senha incorreto(s)");
         }
     }
-
+    
     public void hasPermision(String login, JwtAuthenticationToken token) {
         Cliente obj = this.findByCpfOrEmail(login);
         if (obj.getCpf().equals(token.getName()) || token.getAuthorities().toString().contains("SCOPE_ADMIN")) {

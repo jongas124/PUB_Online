@@ -41,7 +41,7 @@ public class SecurityConfig {
     
     //todos os endpoints são públicos apenas temporiaramente para facilitar o desenvolvimento
     private static final String[] PUBLIC_MATCHERS = {
-            "/"
+            "/**"
     };
 
     private static final String[] PUBLIC_MATCHERS_POST = {
@@ -51,7 +51,8 @@ public class SecurityConfig {
     };
 
     private static final String[] PUBLIC_MATCHERS_GET = {
-        "/menu"
+        "/menu",
+        "/horario"
     };
 
     @Bean

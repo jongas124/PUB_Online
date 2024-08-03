@@ -15,7 +15,7 @@ import com.PUB_Online.PUB.repositories.GarcomRepository;
 import com.PUB_Online.PUB.controllers.dtos.GarcomCreateDTO;
 import com.PUB_Online.PUB.controllers.dtos.GarcomUpdateDTO;
 import com.PUB_Online.PUB.controllers.dtos.LoginRequestDTO;
-import com.PUB_Online.PUB.exceptions.InvalidCPFException;
+import com.PUB_Online.PUB.exceptions.DuplicatedValueException;
 import com.PUB_Online.PUB.exceptions.InvalidCredentialsException;
 import com.PUB_Online.PUB.exceptions.InvalidUsernameException;
 import com.PUB_Online.PUB.exceptions.ObjectNotFoundException;
@@ -41,7 +41,7 @@ public class GarcomService {
     @Transactional
     public Garcom create(Garcom obj) {
         if(this.garcomRepository.findByCpf(CPFUtil.formatarCPF(obj.getCpf())).isPresent()) {
-            throw new InvalidCPFException("CPF em uso");
+            throw new DuplicatedValueException("CPF em uso");
         }
 
         //validações
@@ -173,7 +173,6 @@ public class GarcomService {
 
     public void hasPermision(String login, JwtAuthenticationToken token) {
         Garcom obj = this.findByCpfOrUsername(login);
-        //TODO: verificar se funciona
         if (obj.getCpf().equals(token.getName()) || token.getAuthorities().toString().contains("SCOPE_ADMIN")) {
             return;
         } else {
