@@ -61,7 +61,7 @@ public class HorarioFuncionamentoController {
 
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @PutMapping("/{dia}")
-    public ResponseEntity<HorarioFuncionamento> update(@PathVariable DiasSemana dia, @RequestBody HorarioFuncionamentoUpdateDTO newHorario) {
+    public ResponseEntity<Void> update(@PathVariable DiasSemana dia, @RequestBody HorarioFuncionamentoUpdateDTO newHorario) {
         HorarioFuncionamento obj = this.horarioFuncionamentoService.findByDiaSemana(dia);
         this.horarioFuncionamentoService.update(obj, newHorario);
         return ResponseEntity.noContent().build();

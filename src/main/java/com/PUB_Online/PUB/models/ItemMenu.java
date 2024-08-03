@@ -1,6 +1,10 @@
 package com.PUB_Online.PUB.models;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.DiscriminatorType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,6 +18,7 @@ import lombok.Data;
 @Entity
 @Table(name = "itens_menu")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
 @Data
 public abstract class ItemMenu {
 
@@ -28,8 +33,10 @@ public abstract class ItemMenu {
     @NotBlank
     private String nome;
 
-    @Column(name = "preco", nullable = false) //Considerar trocar float por double ou BigDecimal
-    @NotBlank
-    private float preco;
+    @Column(name = "preco", nullable = false)
+    private BigDecimal preco;
+
+    @Column(insertable = false, updatable = false)
+    private String type;
 
 }

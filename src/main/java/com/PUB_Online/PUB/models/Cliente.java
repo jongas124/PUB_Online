@@ -11,13 +11,17 @@ import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 
 @Entity
 @Table(name = "clientes")
@@ -39,6 +43,10 @@ public class Cliente {
     @CollectionTable(name = "cliente_telefones")
     private Set<String> telefones = new HashSet<String>();
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    Role role;
+
     @Column(name = "email", unique = true, nullable = false, updatable = false)
     @NotBlank
     @Size(min = 5)
@@ -55,5 +63,14 @@ public class Cliente {
 
     @OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER)
     private List<Pedido> pedidos = new ArrayList<Pedido>();
+
+    @Getter
+    @AllArgsConstructor
+    public enum Role {
+        CLIENTE(1, "cliente");
+
+        private int code;
+        private String descricao;
+    }
 
 }

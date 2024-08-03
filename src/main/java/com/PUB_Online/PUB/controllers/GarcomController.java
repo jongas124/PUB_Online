@@ -75,7 +75,7 @@ public class GarcomController {
     }
 
     @PutMapping("/{login}")
-    public ResponseEntity<Garcom> update(@PathVariable String login, @RequestBody GarcomUpdateDTO newGarcom, JwtAuthenticationToken token) {
+    public ResponseEntity<Void> update(@PathVariable String login, @RequestBody GarcomUpdateDTO newGarcom, JwtAuthenticationToken token) {
         garcomService.hasPermision(login, token);
         Garcom obj = this.garcomService.findByCpfOrUsername(login);
         this.garcomService.update(obj, newGarcom);
@@ -83,7 +83,7 @@ public class GarcomController {
     }
 
     @PatchMapping("telefone/{login}")
-    public ResponseEntity<Garcom> updateTelefone(@PathVariable String login, @RequestBody Set<String> telefones, JwtAuthenticationToken token) {
+    public ResponseEntity<Void> updateTelefone(@PathVariable String login, @RequestBody Set<String> telefones, JwtAuthenticationToken token) {
         garcomService.hasPermision(login, token);
         Garcom obj = this.garcomService.findByCpfOrUsername(login);
         this.garcomService.addTelefones(obj.getCpf(), telefones);

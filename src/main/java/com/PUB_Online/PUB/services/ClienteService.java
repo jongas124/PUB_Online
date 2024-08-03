@@ -11,6 +11,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.stereotype.Service;
 
 import com.PUB_Online.PUB.models.Cliente;
+import com.PUB_Online.PUB.models.Cliente.Role;
 import com.PUB_Online.PUB.repositories.ClienteRepository;
 import com.PUB_Online.PUB.controllers.dtos.ClienteCreateDTO;
 import com.PUB_Online.PUB.controllers.dtos.ClienteUpdateDTO;
@@ -57,6 +58,8 @@ public class ClienteService {
 
         //encode de senha
         obj.setPassword(argon2Encoder.encode(obj.getPassword()));
+
+        obj.setRole(Role.CLIENTE);
 
         return this.clienteRepository.save(obj);
     }

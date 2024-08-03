@@ -187,7 +187,6 @@ public class GarcomService {
         garcom.setUsername(obj.username());
         garcom.setNome(obj.nome());
         garcom.setPassword(obj.password());
-        garcom.setRole(Role.GARCOM);
         return garcom;
     }
 

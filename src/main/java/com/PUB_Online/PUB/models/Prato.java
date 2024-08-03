@@ -5,7 +5,6 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,15 +19,13 @@ import lombok.Getter;
 public class Prato extends ItemMenu {
 
     @Column(name = "descricao")
-    @Size(min = 10, max = 250)
+    @Size(min = 8, max = 250)
     private String descricao;
 
-    @Column(name = "disponivel", nullable = false)
-    @NotNull
-    private boolean disponivel;
+    @Column(name = "disponivel")
+    private Boolean disponivel;
 
-    @Column(name = "categoria", nullable = false)
-    @NotNull
+    @Column(name = "categoria")
     @Enumerated(EnumType.STRING)
     private Categoria categoria;
     

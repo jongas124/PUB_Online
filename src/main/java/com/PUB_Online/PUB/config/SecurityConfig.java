@@ -51,7 +51,7 @@ public class SecurityConfig {
     };
 
     private static final String[] PUBLIC_MATCHERS_GET = {
-        "/menu",
+        "/menu/**",
         "/horario"
     };
 

@@ -56,11 +56,14 @@ public class TokenController {
         Instant now = Instant.now();
         Long expiresIn = 3000L; // 3000 segundos: 50 minutos
 
+        String scope = cliente.getRole().toString();
+
         JwtClaimsSet claims = JwtClaimsSet.builder()
             .issuer("PUB_Online")
             .subject(cliente.getCpf().toString())
             .issuedAt(now)
             .expiresAt(now.plusSeconds(expiresIn))
+            .claim("scope", scope)
             .build();
 
         String jwtValue = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();

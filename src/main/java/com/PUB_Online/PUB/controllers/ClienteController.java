@@ -75,15 +75,15 @@ public class ClienteController {
     }
 
     @PutMapping("/{login}")
-    public ResponseEntity<Cliente> update(@PathVariable String login, @RequestBody ClienteUpdateDTO newCliente, JwtAuthenticationToken token) {
+    public ResponseEntity<Void> update(@PathVariable String login, @RequestBody ClienteUpdateDTO dto, JwtAuthenticationToken token) {
         clienteService.hasPermision(login, token);
         Cliente obj = this.clienteService.findByCpfOrEmail(login);
-        this.clienteService.update(obj, newCliente);
+        this.clienteService.update(obj, dto);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("telefone/{login}")
-    public ResponseEntity<Cliente> updateTelefone(@PathVariable String login, @RequestBody Set<String> telefones, JwtAuthenticationToken token) {
+    public ResponseEntity<Void> updateTelefone(@PathVariable String login, @RequestBody Set<String> telefones, JwtAuthenticationToken token) {
         clienteService.hasPermision(login, token);
         Cliente obj = this.clienteService.findByCpfOrEmail(login);
         this.clienteService.addTelefones(obj.getCpf(), telefones);
