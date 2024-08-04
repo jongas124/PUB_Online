@@ -69,7 +69,7 @@ public class ClienteController {
 
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @GetMapping("/all")
-    public ResponseEntity<List<Cliente>> findAll(JwtAuthenticationToken token) {
+    public ResponseEntity<List<Cliente>> findAll() {
         List<Cliente> list = this.clienteService.findAllClientes();
         return ResponseEntity.ok().body(list);
     }

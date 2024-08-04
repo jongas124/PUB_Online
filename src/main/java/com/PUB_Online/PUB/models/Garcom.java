@@ -64,5 +64,4 @@ public class Garcom {
         private String descricao;
     }
     
-
 }

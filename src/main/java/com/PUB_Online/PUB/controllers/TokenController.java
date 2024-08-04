@@ -71,7 +71,6 @@ public class TokenController {
         return ResponseEntity.ok(new LoginResponseDTO(jwtValue, expiresIn));
     }
 
-    //desconsiderar, temporário
     public ResponseEntity<LoginResponseDTO> loginGarcom(LoginRequestDTO loginRequest) {
         Garcom garcom = this.garcomService.findByCpfOrUsername(loginRequest.login());
 

@@ -41,12 +41,11 @@ public class SecurityConfig {
     
     //todos os endpoints são públicos apenas temporiaramente para facilitar o desenvolvimento
     private static final String[] PUBLIC_MATCHERS = {
-            "/**"
+            "/**" //TODO: remover
     };
 
     private static final String[] PUBLIC_MATCHERS_POST = {
             "/cliente",
-            "/garcom",//TODO: temporário
             "/login"
     };
 

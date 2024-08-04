@@ -37,6 +37,7 @@ public class GarcomController {
     @Autowired
     GarcomService garcomService;
     
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @PostMapping
     public ResponseEntity<Void> create(@Valid @RequestBody GarcomCreateDTO obj) {
         Garcom garcom = this.garcomService.fromDTO(obj);

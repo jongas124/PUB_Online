@@ -27,7 +27,7 @@ public class Mesa {
 
     @Column(name = "capacidade", nullable = false)
     @NotNull
-    private int capacidade;
+    private Integer capacidade;
 
     @OneToMany(mappedBy = "mesa", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Reserva> reservas = new ArrayList<Reserva>();

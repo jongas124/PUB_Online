@@ -32,7 +32,7 @@ public class Reserva {
     private LocalTime horaAberturaReserva;
 
     @Column(name = "numero_pessoas", nullable = false, updatable = false)
-    private int numeroPessoas;
+    private Integer numeroPessoas;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "cliente_cpf", nullable = false, updatable = false, referencedColumnName = "cpf")

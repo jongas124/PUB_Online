@@ -47,7 +47,7 @@ public class PedidoControler {
         return ResponseEntity.ok().body(obj);
     }
 
-    @PreAuthorize("hasAnyAuthority('SCOPE_ADMIN', 'SCOPE_USER')")
+    @PreAuthorize("hasAnyAuthority('SCOPE_ADMIN', 'SCOPE_GARCOM')")
     @PutMapping("/{id}")
     public ResponseEntity<Pedido> updateStatus(@PathVariable Long id, @RequestBody Status status) {
     Pedido newObj = this.pedidoService.updateStatus(id, status);
@@ -61,8 +61,8 @@ public class PedidoControler {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/admin/{id}")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    @DeleteMapping("/admin/{id}")
     public ResponseEntity<Void> deleteAdmin(@PathVariable Long id) {
         this.pedidoService.deleteAdmin(id);
         return ResponseEntity.noContent().build();

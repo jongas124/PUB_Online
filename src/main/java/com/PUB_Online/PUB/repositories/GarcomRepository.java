@@ -14,6 +14,4 @@ public interface GarcomRepository extends JpaRepository<Garcom, String> {
     Optional<Garcom> findByCpf(String cpf);
     List<Garcom> findByNomeContaining(String nome);
     Optional<Garcom> findByUsername(String username);
-
-    
 }
