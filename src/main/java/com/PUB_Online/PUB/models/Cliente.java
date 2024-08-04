@@ -15,7 +15,9 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -61,8 +63,9 @@ public class Cliente {
     @OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER)
     private List<Reserva> reservas = new ArrayList<Reserva>();
 
-    @OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER)
-    private List<Pedido> pedidos = new ArrayList<Pedido>();
+    @OneToOne
+    @JoinColumn(name = "comanda_numero", referencedColumnName = "numero")
+    private Comanda comanda;
 
     @Getter
     @AllArgsConstructor

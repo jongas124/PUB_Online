@@ -33,15 +33,24 @@ public class HorarioFuncionamento {
     @Getter
     public enum DiasSemana {
 
-        DOMINGO(1, "Domingo"),
-        SEGUNDA(2, "Segunda"),
-        TERCA(3, "Terça"),
-        QUARTA(4, "Quarta"),
-        QUINTA(5, "Quinta"),
-        SEXTA(6, "Sexta"),
-        SABADO(7, "Sábado");
+        SEGUNDA(1, "Segunda"),
+        TERCA(2, "Terça"),
+        QUARTA(3, "Quarta"),
+        QUINTA(4, "Quinta"),
+        SEXTA(5, "Sexta"),
+        SABADO(6, "Sábado"),
+        DOMINGO(7, "Domingo");
 
         private int code;
         private String nomeDia; 
+
+        public static DiasSemana fromCode(int code) {
+            for (DiasSemana dia : DiasSemana.values()) {
+                if (dia.code == code) {
+                    return dia;
+                }
+            }
+            return null;
+        }
     }
 }

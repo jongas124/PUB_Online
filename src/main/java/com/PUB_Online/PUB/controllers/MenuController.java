@@ -48,6 +48,13 @@ public class MenuController {
         List<ItemMenuReponseDTO> item = this.menuService.findAll();
         return ResponseEntity.ok().body(item);
     }
+
+    @GetMapping("/admin/all")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    public ResponseEntity<List<ItemMenuReponseDTO>> findAllAdmin() {
+        List<ItemMenuReponseDTO> item = this.menuService.findAllAdmin();
+        return ResponseEntity.ok().body(item);
+    }
     
     @PostMapping("/prato")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")

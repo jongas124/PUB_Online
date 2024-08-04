@@ -1,5 +1,7 @@
 package com.PUB_Online.PUB.services;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
@@ -57,6 +59,19 @@ public class HorarioFuncionamentoService {
     public void delete(DiasSemana diaSemana) {
         HorarioFuncionamento obj = this.findByDiaSemana(diaSemana);
         this.horarioFuncionamentoRepository.delete(obj);
+    }
+
+    public boolean isHorarioFuncionamento() {
+        LocalDate date = LocalDate.now();
+        LocalTime now = LocalTime.now();
+        int codigoDia = date.getDayOfWeek().getValue();
+        DiasSemana diaSemana = DiasSemana.fromCode(codigoDia);
+        HorarioFuncionamento obj = this.findByDiaSemana(diaSemana);
+        if(!now.isBefore(obj.getHoraAbertura()) && !now.isAfter(obj.getHoraFechamento())) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public HorarioFuncionamento fromDTO(HorarioFuncionamentoCreateDTO dto) {

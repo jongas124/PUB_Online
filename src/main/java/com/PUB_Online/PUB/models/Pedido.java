@@ -1,5 +1,6 @@
 package com.PUB_Online.PUB.models;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -46,24 +47,19 @@ public class Pedido {
 
     @Column(name = "preco", nullable = false) //considerar trocar float por double ou BigDecimal
     @NotNull
-    private float preco;
+    private BigDecimal preco;
 
     @Column(name = "status", nullable = false)
     @NotNull
+    @Enumerated(EnumType.STRING)
     private Status status;
     
-    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @NotNull
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ItemPedido> itens = new ArrayList<ItemPedido>();
-
-    @ManyToOne
-    @JoinColumn(name = "cliente_cpf", updatable = false, referencedColumnName = "cpf")
-    private Cliente cliente;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "comanda_numero", nullable = false, updatable = false, referencedColumnName = "numero")
     @NotNull
-    @Enumerated(EnumType.STRING)
     private Comanda comanda;
     
     @Getter

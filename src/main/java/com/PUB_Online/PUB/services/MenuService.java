@@ -85,10 +85,16 @@ public class MenuService {
         }
     }
 
-    public List<ItemMenuReponseDTO> findAll() {
+    public List<ItemMenuReponseDTO> findAllAdmin() {
         List<ItemMenuReponseDTO> itens = this.pratoRepository.findAll().stream().map(prato -> this.toDTO(prato)).collect(Collectors.toList());
         itens.addAll(this.bebidaRepository.findAll().stream().map(bebida -> this.toDTO(bebida)).collect(Collectors.toList()));
         return itens;
+    }
+
+    public List<ItemMenuReponseDTO> findAll() {
+        List<ItemMenuReponseDTO> itens = this.pratoRepository.findAll().stream().map(prato -> this.toDTO(prato)).collect(Collectors.toList());
+        itens.addAll(this.bebidaRepository.findAll().stream().map(bebida -> this.toDTO(bebida)).collect(Collectors.toList()));
+        return itens.stream().filter(item -> item.disponivel() == true).collect(Collectors.toList());
     }
 
     public void updatePrato(Prato obj, PratoCreateUpdateDTO update) {

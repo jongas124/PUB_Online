@@ -1,5 +1,6 @@
 package com.PUB_Online.PUB.models;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -33,7 +35,7 @@ public class Comanda {
 
     @Column(name = "valor_Total", nullable = false) //considerar trocar float por double ou BigDecimal
     @NotNull
-    private float valorTotal;
+    private BigDecimal valorTotal;
     
     @CreationTimestamp
     @Column(name = "data", updatable = false)
@@ -46,10 +48,13 @@ public class Comanda {
     @Column(name = "hora_fechamento_comanda", updatable = false)
     private LocalTime horaFechamentoComanda;
 
-    @OneToOne(mappedBy = "comanda", optional = false)
-    @NotNull
-    // @JoinColumn(name = "mesa_numero", referencedColumnName = "numero", nullable = false)
+    @OneToOne(mappedBy = "comanda")
+    @JoinColumn(name = "mesa_numero", referencedColumnName = "numero")
     private Mesa mesa;
+
+    @OneToOne(mappedBy = "comanda")
+    @JoinColumn(name = "cliente_cpf", referencedColumnName = "cpf")
+    private Cliente cliente;
 
     @OneToMany(mappedBy = "comanda", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Pedido> pedidos = new ArrayList<Pedido>();

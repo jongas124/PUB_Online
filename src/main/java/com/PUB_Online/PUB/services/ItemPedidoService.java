@@ -1,17 +1,15 @@
 package com.PUB_Online.PUB.services;
 
-import java.util.Optional;
+
+import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.PUB_Online.PUB.exceptions.DuplicatedValueException;
+import com.PUB_Online.PUB.controllers.dtos.ItemPedidoDTO;
 import com.PUB_Online.PUB.exceptions.InvalidNumberException;
-import com.PUB_Online.PUB.exceptions.ObjectNotFoundException;
-import com.PUB_Online.PUB.models.ItemMenu;
+import com.PUB_Online.PUB.exceptions.MenuException;
 import com.PUB_Online.PUB.models.ItemPedido;
-import com.PUB_Online.PUB.models.ItemPedidoId;
-import com.PUB_Online.PUB.models.Pedido;
 import com.PUB_Online.PUB.repositories.ItemPedidoRepository;
 
 @Service
@@ -20,45 +18,30 @@ public class ItemPedidoService {
     @Autowired
     private ItemPedidoRepository itemPedidoRepository;
 
-    public ItemPedido ExibeItemMenu(ItemMenu itemMenu, Pedido pedido) {
-        ItemPedidoId id = new ItemPedidoId();
-        id.setItemMenuId(itemMenu.getId());
-        id.setPedidoId(pedido.getId());
-        Optional<ItemPedido> itemPedido = itemPedidoRepository.findById(id);
-        if(itemPedido.isPresent()) {
-            return itemPedido.get();
-        } else {
-            throw new ObjectNotFoundException("Item não encontrado");
-        }
-    }
+    @Autowired
+    private MenuService menuService;
 
-    public ItemPedido novoItemPedido(ItemMenu itemMenu, Pedido pedido, int quantidade) {
+    public ItemPedido fromDTO(ItemPedidoDTO item) {
         ItemPedido obj = new ItemPedido();
+        obj.setId(null);
         try {
-            this.ExibeItemMenu(itemMenu, pedido);
-            throw new DuplicatedValueException("Item já adicionado ao pedido");
-        } catch (ObjectNotFoundException e) {
+            obj.setPrato(this.menuService.findPratoById(item.id()));
+            if (obj.getPrato().getDisponivel() == false) {
+                throw new MenuException("Prato indisponível");
+            }
+        } catch (Exception e) {
+            obj.setBebida(this.menuService.findBebidaById(item.id()));
+            if (obj.getBebida().getQuantidadeEstoque() <= 0) {
+                throw new MenuException("Bebida indisponível");
+            }
         }
-        obj.setItemMenu(itemMenu);
-        obj.setPedido(pedido);
-        if (quantidade <= 0) {
+        if (item.quantidade() <= 0) {
             throw new InvalidNumberException("Quantidade inválida");
         }
-        obj.setQuantidade(quantidade);
+        obj.setQuantidade(item.quantidade());
+        obj.setPrecoItemPedido(new BigDecimal("0.00"));
+        obj.getPrecoItemPedido().multiply(new BigDecimal(item.quantidade()));
         return this.itemPedidoRepository.save(obj);
     }
 
-    public ItemPedido atualizaQuantidade(ItemMenu itemMenu, Pedido pedido, int quantidade) {
-        ItemPedido obj = this.ExibeItemMenu(itemMenu, pedido);
-        if (quantidade <= 0) {
-            throw new InvalidNumberException("Quantidade inválida");
-        }
-        obj.setQuantidade(quantidade);
-        return this.itemPedidoRepository.save(obj);
-    }
-
-    public void deletaItemPedido(ItemMenu itemMenu, Pedido pedido) {
-        ItemPedido obj = this.ExibeItemMenu(itemMenu, pedido);
-        this.itemPedidoRepository.delete(obj);
-    }
 }

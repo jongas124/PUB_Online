@@ -1,12 +1,14 @@
 package com.PUB_Online.PUB.models;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Entity
@@ -16,20 +18,21 @@ public class ItemPedido {
 
     public static final String TABLE_NAME = "itens_pedido";
 
-    @EmbeddedId
-    private ItemPedidoId id;
+    @Id
+    @Column(name = "id", unique = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "itens_menu_id", insertable = false, updatable = false, nullable = false, referencedColumnName = "id")
-    @NotNull
-    public ItemMenu itemMenu;
+    @ManyToOne
+    private Bebida bebida;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "pedido_id", insertable = false, updatable = false, nullable = false, referencedColumnName = "id")
-    @NotNull
-    public Pedido pedido;
+    @ManyToOne
+    private Prato prato;
 
     @Column(name = "quantidade")
-    public int quantidade;
+    private int quantidade;
+
+    @Column(name = "preco_item_pedido")
+    private BigDecimal precoItemPedido;
 
 }
