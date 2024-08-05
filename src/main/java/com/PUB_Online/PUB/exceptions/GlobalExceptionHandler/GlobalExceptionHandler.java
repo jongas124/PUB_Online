@@ -1,16 +1,15 @@
 package com.PUB_Online.PUB.exceptions.GlobalExceptionHandler;
 
-import java.net.http.HttpHeaders;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.PUB_Online.PUB.exceptions.DuplicatedValueException;
 import com.PUB_Online.PUB.exceptions.HorarioException;
@@ -29,31 +28,19 @@ import com.PUB_Online.PUB.exceptions.PermissionException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j(topic = "GLOBAL_EXCEPTION_HANDLER")
-public class GlobalExceptionHandler {
+@RestControllerAdvice
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
     @Value("${server.error.include-exception}")
     private boolean printStackTrace;
-
-    // @Override
-    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-            HttpHeaders headers, HttpStatus status, WebRequest request) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                "Validation error. Check 'errors' field for details.");
-        for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
-            errorResponse.addValidationError(fieldError.getField(), fieldError.getDefaultMessage());
-        }
-        return ResponseEntity.unprocessableEntity().body(errorResponse);
-    }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<Object> handleAllUncaughtException(
             Exception exception,
             WebRequest request) {
-        final String errorMessage = "Unknown error occurred";
+        final String errorMessage = "Um erro desconhecido ocorreu";
         log.error(errorMessage, exception);
-        ;
         return buildErrorResponse(
                 exception,
                 errorMessage,
@@ -65,8 +52,8 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<Object> handleDuplicatedValueException(
             DuplicatedValueException duplicatedValueException,
-            WebRequest request,
-            String errorMessage) {
+            WebRequest request) {
+        final String errorMessage = duplicatedValueException.getMessage();
         log.error(errorMessage, duplicatedValueException);
         return buildErrorResponse(
                 duplicatedValueException,
@@ -79,8 +66,8 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.LOCKED)
     public ResponseEntity<Object> handleHorarioException(
             HorarioException horarioException,
-            WebRequest request,
-            String errorMessage) {
+            WebRequest request) {
+        final String errorMessage = horarioException.getMessage();
         log.error(errorMessage, horarioException);
         return buildErrorResponse(
                 horarioException,
@@ -93,8 +80,8 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleInvalidCPFException(
             InvalidCPFException invalidCPFException,
-            WebRequest request,
-            String errorMessage) {
+            WebRequest request) {
+        final String errorMessage = invalidCPFException.getMessage();
         log.error(errorMessage, invalidCPFException);
         return buildErrorResponse(
                 invalidCPFException,
@@ -107,8 +94,8 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ResponseEntity<Object> handleInvalidCredentialsException(
             InvalidCredentialsException invalidCredentialsException,
-            WebRequest request,
-            String errorMessage) {
+            WebRequest request) {
+        final String errorMessage = invalidCredentialsException.getMessage();
         log.error(errorMessage, invalidCredentialsException);
         return buildErrorResponse(
                 invalidCredentialsException,
@@ -121,8 +108,8 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleInvalidEmailException(
             InvalidEmailException invalidEmailException,
-            WebRequest request,
-            String errorMessage) {
+            WebRequest request) {
+        final String errorMessage = invalidEmailException.getMessage();
         log.error(errorMessage, invalidEmailException);
         return buildErrorResponse(
                 invalidEmailException,
@@ -135,8 +122,8 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ResponseEntity<Object> handleInvalidNumberException(
             InvalidNumberException invalidNumberException,
-            WebRequest request,
-            String errorMessage) {
+            WebRequest request) {
+        final String errorMessage = invalidNumberException.getMessage();
         log.error(errorMessage, invalidNumberException);
         return buildErrorResponse(
                 invalidNumberException,
@@ -149,8 +136,8 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleInvalidPasswordException(
             InvalidPasswordException invalidPasswordException,
-            WebRequest request,
-            String errorMessage) {
+            WebRequest request) {
+        final String errorMessage = invalidPasswordException.getMessage();
         log.error(errorMessage, invalidPasswordException);
         return buildErrorResponse(
                 invalidPasswordException,
@@ -163,8 +150,8 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleInvalidTelefoneException(
             InvalidTelefoneException invalidTelefoneException,
-            WebRequest request,
-            String errorMessage) {
+            WebRequest request) {
+        final String errorMessage = invalidTelefoneException.getMessage();
         log.error(errorMessage, invalidTelefoneException);
         return buildErrorResponse(
                 invalidTelefoneException,
@@ -177,8 +164,8 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleInvalidUsernameException(
             InvalidUsernameException invalidUsernameException,
-            WebRequest request,
-            String errorMessage) {
+            WebRequest request) {
+        final String errorMessage = invalidUsernameException.getMessage();
         log.error(errorMessage, invalidUsernameException);
         return buildErrorResponse(
                 invalidUsernameException,
@@ -191,8 +178,8 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleMenuException(
             MenuException menuException,
-            WebRequest request,
-            String errorMessage) {
+            WebRequest request) {
+        final String errorMessage = menuException.getMessage();
         log.error(errorMessage, menuException);
         return buildErrorResponse(
                 menuException,
@@ -205,8 +192,8 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<Object> handleObjectNotFoundException(
             ObjectNotFoundException objectNotFoundException,
-            WebRequest request,
-            String errorMessage) {
+            WebRequest request) {
+        final String errorMessage = objectNotFoundException.getMessage();
         log.error(errorMessage, objectNotFoundException);
         return buildErrorResponse(
                 objectNotFoundException,
@@ -219,8 +206,8 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.LOCKED)
     public ResponseEntity<Object> handlePedidoException(
             PedidoException pedidoException,
-            WebRequest request,
-            String errorMessage) {
+            WebRequest request) {
+        final String errorMessage = pedidoException.getMessage();
         log.error(errorMessage, pedidoException);
         return buildErrorResponse(
                 pedidoException,
@@ -233,8 +220,8 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ResponseEntity<Object> handlePermissionException(
             PermissionException permissionException,
-            WebRequest request,
-            String errorMessage) {
+            WebRequest request) {
+        final String errorMessage = permissionException.getMessage();
         log.error(errorMessage, permissionException);
         return buildErrorResponse(
                 permissionException,
