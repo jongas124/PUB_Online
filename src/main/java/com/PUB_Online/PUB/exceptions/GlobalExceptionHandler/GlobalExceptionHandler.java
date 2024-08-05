@@ -26,6 +26,9 @@ import com.PUB_Online.PUB.exceptions.ObjectNotFoundException;
 import com.PUB_Online.PUB.exceptions.PedidoException;
 import com.PUB_Online.PUB.exceptions.PermissionException;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j(topic = "GLOBAL_EXCEPTION_HANDLER")
 public class GlobalExceptionHandler {
     @Value("${server.error.include-exception}")
     private boolean printStackTrace;
@@ -49,7 +52,8 @@ public class GlobalExceptionHandler {
             Exception exception,
             WebRequest request) {
         final String errorMessage = "Unknown error occurred";
-        // log.error(errorMessage, exception);
+        log.error(errorMessage, exception);
+        ;
         return buildErrorResponse(
                 exception,
                 errorMessage,
@@ -61,9 +65,9 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<Object> handleDuplicatedValueException(
             DuplicatedValueException duplicatedValueException,
-            WebRequest request) {
-        String errorMessage = "Não são permitidos valores duplicados";
-        // log.error(errorMessage, duplicatedValueException)
+            WebRequest request,
+            String errorMessage) {
+        log.error(errorMessage, duplicatedValueException);
         return buildErrorResponse(
                 duplicatedValueException,
                 errorMessage,
@@ -75,9 +79,9 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.LOCKED)
     public ResponseEntity<Object> handleHorarioException(
             HorarioException horarioException,
-            WebRequest request) {
-        String errorMessage = "Fora do horário de funcionamento";
-        // log.error(errorMessage, horarioException)
+            WebRequest request,
+            String errorMessage) {
+        log.error(errorMessage, horarioException);
         return buildErrorResponse(
                 horarioException,
                 errorMessage,
@@ -89,9 +93,9 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleInvalidCPFException(
             InvalidCPFException invalidCPFException,
-            WebRequest request) {
-        String errorMessage = "CPF inválido";
-        // log.error(errorMessage, invalidCPFException)
+            WebRequest request,
+            String errorMessage) {
+        log.error(errorMessage, invalidCPFException);
         return buildErrorResponse(
                 invalidCPFException,
                 errorMessage,
@@ -103,9 +107,9 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ResponseEntity<Object> handleInvalidCredentialsException(
             InvalidCredentialsException invalidCredentialsException,
-            WebRequest request) {
-        String errorMessage = "Credenciais inválidas";
-        // log.error(errorMessage, invalidCredentialsException)
+            WebRequest request,
+            String errorMessage) {
+        log.error(errorMessage, invalidCredentialsException);
         return buildErrorResponse(
                 invalidCredentialsException,
                 errorMessage,
@@ -117,9 +121,9 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleInvalidEmailException(
             InvalidEmailException invalidEmailException,
-            WebRequest request) {
-        String errorMessage = "E-mail inválido";
-        // log.error(errorMessage, invalidEmailException)
+            WebRequest request,
+            String errorMessage) {
+        log.error(errorMessage, invalidEmailException);
         return buildErrorResponse(
                 invalidEmailException,
                 errorMessage,
@@ -131,9 +135,9 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ResponseEntity<Object> handleInvalidNumberException(
             InvalidNumberException invalidNumberException,
-            WebRequest request) {
-        String errorMessage = "Número inválido";
-        // log.error(errorMessage, invalidNumberException)
+            WebRequest request,
+            String errorMessage) {
+        log.error(errorMessage, invalidNumberException);
         return buildErrorResponse(
                 invalidNumberException,
                 errorMessage,
@@ -145,9 +149,9 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleInvalidPasswordException(
             InvalidPasswordException invalidPasswordException,
-            WebRequest request) {
-        String errorMessage = "Senha inválida";
-        // log.error(errorMessage, invalidPasswordException)
+            WebRequest request,
+            String errorMessage) {
+        log.error(errorMessage, invalidPasswordException);
         return buildErrorResponse(
                 invalidPasswordException,
                 errorMessage,
@@ -159,9 +163,9 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleInvalidTelefoneException(
             InvalidTelefoneException invalidTelefoneException,
-            WebRequest request) {
-        String errorMessage = "Telefone inválido";
-        // log.error(errorMessage, invalidTelefoneException)
+            WebRequest request,
+            String errorMessage) {
+        log.error(errorMessage, invalidTelefoneException);
         return buildErrorResponse(
                 invalidTelefoneException,
                 errorMessage,
@@ -173,9 +177,9 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleInvalidUsernameException(
             InvalidUsernameException invalidUsernameException,
-            WebRequest request) {
-        String errorMessage = "Username inválido";
-        // log.error(errorMessage, invalidUsernameException)
+            WebRequest request,
+            String errorMessage) {
+        log.error(errorMessage, invalidUsernameException);
         return buildErrorResponse(
                 invalidUsernameException,
                 errorMessage,
@@ -187,9 +191,9 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleMenuException(
             MenuException menuException,
-            WebRequest request) {
-        String errorMessage = "Produto indisponível";
-        // log.error(errorMessage, menuException)
+            WebRequest request,
+            String errorMessage) {
+        log.error(errorMessage, menuException);
         return buildErrorResponse(
                 menuException,
                 errorMessage,
@@ -201,9 +205,9 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<Object> handleObjectNotFoundException(
             ObjectNotFoundException objectNotFoundException,
-            WebRequest request) {
-        String errorMessage = "Não foi encontrado";
-        // log.error(errorMessage, objectNotFoundException)
+            WebRequest request,
+            String errorMessage) {
+        log.error(errorMessage, objectNotFoundException);
         return buildErrorResponse(
                 objectNotFoundException,
                 errorMessage,
@@ -215,9 +219,9 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.LOCKED)
     public ResponseEntity<Object> handlePedidoException(
             PedidoException pedidoException,
-            WebRequest request) {
-        String errorMessage = "Não é possível deletar um pedido sendo preparado ou concluido";
-        // log.error(errorMessage, pedidoException)
+            WebRequest request,
+            String errorMessage) {
+        log.error(errorMessage, pedidoException);
         return buildErrorResponse(
                 pedidoException,
                 errorMessage,
@@ -229,9 +233,9 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ResponseEntity<Object> handlePermissionException(
             PermissionException permissionException,
-            WebRequest request) {
-        String errorMessage = "Sem permissão para executar esta ação";
-        // log.error(errorMessage, permissionException)
+            WebRequest request,
+            String errorMessage) {
+        log.error(errorMessage, permissionException);
         return buildErrorResponse(
                 permissionException,
                 errorMessage,
