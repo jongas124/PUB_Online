@@ -82,7 +82,7 @@ public class ClienteController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("telefone/{login}")
+    @PatchMapping("/telefone/{login}")
     public ResponseEntity<Void> updateTelefone(@PathVariable String login, @RequestBody Set<String> telefones, JwtAuthenticationToken token) {
         clienteService.hasPermision(login, token);
         Cliente obj = this.clienteService.findByCpfOrEmail(login);

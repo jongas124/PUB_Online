@@ -81,7 +81,7 @@ public class GarcomController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("telefone/{login}")
+    @PatchMapping("/telefone/{login}")
     public ResponseEntity<Void> updateTelefone(@PathVariable String login, @RequestBody Set<String> telefones, JwtAuthenticationToken token) {
         garcomService.hasPermision(login, token);
         Garcom obj = this.garcomService.findByCpfOrUsername(login);
