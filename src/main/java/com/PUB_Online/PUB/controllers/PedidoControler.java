@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,7 +33,7 @@ public class PedidoControler {
     @Autowired
     private PedidoService pedidoService;
 
-    public ResponseEntity<Void> create(List<ItemPedidoDTO> itens) {
+    public ResponseEntity<Void> create(@RequestBody List<ItemPedidoDTO> itens) {
         Pedido obj = this.pedidoService.create(itens);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}").buildAndExpand(obj.getId()).toUri();
@@ -40,10 +41,16 @@ public class PedidoControler {
         return ResponseEntity.created(uri).build();
     }
 
-    //TODO: permissões
     @GetMapping("/{id}")
-    public ResponseEntity<Pedido> findById(Long id) {
-        Pedido obj = this.pedidoService.findById(id);
+    public ResponseEntity<Pedido> findById(@PathVariable Long id, JwtAuthenticationToken token) {
+        Pedido obj = this.pedidoService.findById(id, token.getName());
+        return ResponseEntity.ok().body(obj);
+    }
+
+    @PreAuthorize("hasAnyAuthority('SCOPE_ADMIN', 'SCOPE_GARCOM')")
+    @GetMapping("/garcom/{id}")
+    public ResponseEntity<Pedido> findByIdGarcom(@PathVariable Long id) {
+        Pedido obj = this.pedidoService.findByIdGarcom(id);
         return ResponseEntity.ok().body(obj);
     }
 
@@ -54,10 +61,16 @@ public class PedidoControler {
     return ResponseEntity.ok().body(newObj);
     }
 
-    //TODO: permissões
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        this.pedidoService.delete(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id, JwtAuthenticationToken token) {
+        this.pedidoService.delete(id, token.getName());
+        return ResponseEntity.noContent().build();
+    }
+
+    @PreAuthorize("hasAnyAuthority('SCOPE_ADMIN', 'SCOPE_GARCOM')")
+    @DeleteMapping("/garcom/{id}")
+    public ResponseEntity<Void> deleteGarcom(@PathVariable Long id) {
+        this.pedidoService.deleteGarcom(id);
         return ResponseEntity.noContent().build();
     }
 

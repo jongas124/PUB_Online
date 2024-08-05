@@ -91,5 +91,8 @@ public class ComandaService {
         this.comandaRepository.save(comanda);
     }
 
-
+    public void deleteAdmin(Long numeroMesa) {
+        Comanda comanda = mesaService.findById(numeroMesa).getComanda();
+        this.comandaRepository.deleteById(comanda.getNumero());
+    }
 }

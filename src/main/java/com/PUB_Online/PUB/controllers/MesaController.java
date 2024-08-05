@@ -49,7 +49,7 @@ public class MesaController {
 
     @PreAuthorize("hasAnyAuthority('SCOPE_ADMIN', 'SCOPE_GARCOM')")
     @GetMapping("/{numero}")
-    public ResponseEntity<Mesa> findByNumero(Long numero) {
+    public ResponseEntity<Mesa> findByNumero(@PathVariable Long numero) {
         Mesa obj = this.mesaService.findById(numero);
         return ResponseEntity.ok().body(obj);
     }

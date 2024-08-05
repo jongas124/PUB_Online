@@ -44,27 +44,25 @@ public class ComandaController {
     @PostMapping
     public ResponseEntity<Void> create(@RequestBody Long pedidoId, JwtAuthenticationToken token) {
         Cliente cliente = this.clienteService.findByCpf(token.getName());
-        Pedido pedido = this.pedidoService.findById(pedidoId);
+        Pedido pedido = this.pedidoService.findById(pedidoId, token.getName());
         Comanda comanda = this.comandaService.create(cliente, pedido);
-
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{numero}").buildAndExpand(comanda.getNumero()).toUri();
         return ResponseEntity.created(uri).build();
     }
 
     @PreAuthorize("hasAnyAuthority('SCOPE_ADMIN', 'SCOPE_GARCOM')")
-    @PostMapping("/mesa/{MesaId}")
-    public ResponseEntity<Void> createViaMesa(@PathVariable Long MesaId, @RequestBody Long pedidoId) {
-        Pedido pedido = this.pedidoService.findById(pedidoId);
-        Comanda comanda = this.comandaService.createViaMesa(MesaId, pedido);
-
+    @PostMapping("/mesa/{mesaId}")
+    public ResponseEntity<Void> createViaMesa(@PathVariable Long mesaId, @RequestBody Long pedidoId) {
+        Pedido pedido = this.pedidoService.findByIdGarcom(pedidoId);
+        Comanda comanda = this.comandaService.createViaMesa(mesaId, pedido);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{numero}").buildAndExpand(comanda.getNumero()).toUri();
         return ResponseEntity.created(uri).build();
     }
 
     @GetMapping
-    public ResponseEntity<Comanda> findByNumero(JwtAuthenticationToken token) {
+    public ResponseEntity<Comanda> findByToken(JwtAuthenticationToken token) {
         Comanda obj = this.clienteService.findByCpf(token.getName()).getComanda();
         return ResponseEntity.ok().body(obj);
     }
@@ -79,7 +77,7 @@ public class ComandaController {
     @PutMapping
     public ResponseEntity<Comanda> update(@RequestBody Long pedidoId, JwtAuthenticationToken token) {
         Cliente cliente = this.clienteService.findByCpf(token.getName());
-        Pedido pedido = this.pedidoService.findById(pedidoId);
+        Pedido pedido = this.pedidoService.findById(pedidoId, token.getName());
         Comanda comanda = this.comandaService.update(cliente, pedido);
         return ResponseEntity.ok().body(comanda);
     }
@@ -87,7 +85,7 @@ public class ComandaController {
     @PreAuthorize("hasAnyAuthority('SCOPE_ADMIN', 'SCOPE_GARCOM')")
     @PutMapping("/mesa/{numeroMesa}")
     public ResponseEntity<Comanda> updateViaMesa(@PathVariable Long numeroMesa, @RequestBody Long pedidoId) {
-        Pedido pedido = this.pedidoService.findById(pedidoId);
+        Pedido pedido = this.pedidoService.findByIdGarcom(pedidoId);
         Comanda comanda = this.comandaService.updateViaMesa(numeroMesa, pedido);
         return ResponseEntity.ok().body(comanda);
     }
@@ -106,5 +104,10 @@ public class ComandaController {
         return ResponseEntity.noContent().build();
     }
 
-
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    @DeleteMapping("/admin/{idMesa}")
+    public ResponseEntity<Void> deleteAdmin(@PathVariable Long idMesa) {
+        this.comandaService.deleteAdmin(idMesa);
+        return ResponseEntity.noContent().build();
+    }
 }

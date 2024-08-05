@@ -11,6 +11,7 @@ import com.PUB_Online.PUB.controllers.dtos.ItemPedidoDTO;
 import com.PUB_Online.PUB.exceptions.HorarioException;
 import com.PUB_Online.PUB.exceptions.ObjectNotFoundException;
 import com.PUB_Online.PUB.exceptions.PedidoException;
+import com.PUB_Online.PUB.models.Comanda;
 import com.PUB_Online.PUB.models.Pedido;
 import com.PUB_Online.PUB.models.Pedido.Status;
 import com.PUB_Online.PUB.repositories.PedidoRepository;
@@ -26,6 +27,9 @@ public class PedidoService {
 
     @Autowired
     private HorarioFuncionamentoService horarioFuncionamentoService;
+
+    @Autowired
+    private ClienteService clienteService;
 
     public Pedido create(List<ItemPedidoDTO> itens) {
         Pedido obj = new Pedido();
@@ -43,7 +47,17 @@ public class PedidoService {
         return obj;
     }
 
-    public Pedido findById(Long id) {
+    public Pedido findById(Long id, String cpf) {
+        Comanda comanda = this.clienteService.findByCpf(cpf).getComanda();
+        Optional<Pedido> obj = comanda.getPedidos().stream().filter(pedido -> pedido.getId() == id).findFirst();
+        if(obj.isPresent()) {
+            return obj.get();
+        } else {
+            throw new ObjectNotFoundException("Pedido não encontrado");
+        }
+    }
+
+    public Pedido findByIdGarcom(Long id) {
         Optional<Pedido> obj = this.pedidoRepository.findById(id);
         if(obj.isPresent()) {
             return obj.get();
@@ -53,17 +67,27 @@ public class PedidoService {
     }
 
     public Pedido updateStatus(Long id, Status status) {
-        Pedido newObj = this.findById(id);
+        Pedido newObj = this.findByIdGarcom(id);
         newObj.setStatus(status);
         return this.pedidoRepository.save(newObj);
     }
 
-    public void delete(Long id) {
-        this.findById(id);
-        if(!(this.findById(id).getStatus() == Status.FILA)) {
+    public void deleteGarcom(Long id) {
+        this.findByIdGarcom(id);
+        if(!(this.findByIdGarcom(id).getStatus() == Status.FILA)) {
             throw new PedidoException("Não é possível deletar um pedido sendo preparado ou concluido");
         }
         this.pedidoRepository.deleteById(id);
+    }
+
+    public void delete(Long id, String cpf) {
+        this.findById(id, cpf);
+        Comanda comanda = this.clienteService.findByCpf(cpf).getComanda();
+        Optional<Pedido> obj = comanda.getPedidos().stream().filter(pedido -> pedido.getId() == id).findFirst();
+        if(!(this.findByIdGarcom(obj.get().getId()).getStatus() == Status.FILA)) {
+            throw new PedidoException("Não é possível deletar um pedido sendo preparado ou concluido");
+        }
+        this.pedidoRepository.deleteById(obj.get().getId());
     }
 
     public void deleteAdmin(Long id) {

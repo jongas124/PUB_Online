@@ -19,8 +19,6 @@ import com.PUB_Online.PUB.controllers.dtos.GarcomUpdateDTO;
 import com.PUB_Online.PUB.models.Garcom;
 import com.PUB_Online.PUB.services.GarcomService;
 
-import jakarta.validation.Valid;
-
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -39,7 +37,7 @@ public class GarcomController {
     
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @PostMapping
-    public ResponseEntity<Void> create(@Valid @RequestBody GarcomCreateDTO obj) {
+    public ResponseEntity<Void> create(@RequestBody GarcomCreateDTO obj) {
         Garcom garcom = this.garcomService.fromDTO(obj);
         Garcom newGarcom = this.garcomService.create(garcom);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
