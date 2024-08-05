@@ -46,7 +46,8 @@ public class SecurityConfig {
 
     private static final String[] PUBLIC_MATCHERS_POST = {
             "/cliente",
-            "/login"
+            "/login",
+            "/mesa/livres"
     };
 
     private static final String[] PUBLIC_MATCHERS_GET = {

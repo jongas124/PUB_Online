@@ -54,7 +54,6 @@ public class MesaController {
         return ResponseEntity.ok().body(obj);
     }
 
-    @PreAuthorize("hasAnyAuthority('SCOPE_ADMIN', 'SCOPE_GARCOM')")
     @GetMapping("/livres")
     public ResponseEntity<List<Mesa>> findLivres() {
         List<Mesa> obj = this.mesaService.findLivres();
