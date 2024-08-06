@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.PUB_Online</groupId>
 	<artifactId>PUB</artifactId>
-	<version>0.1.0</version>
+	<version>1.0.0</version>
 	<name>PUB</name>
 	<description>API Java com Spring Boot para gerenciar um PUB Online</description>
 	<build>
@@ -25,7 +25,7 @@
 				<version>3.7.1</version>
         	</plugin>
 		</plugins>
-		<finalName>javaapi_app</finalName>
+		<finalName>pub_app</finalName>
 	</build>
 	<properties>
 		<java.version>21</java.version>
@@ -125,6 +125,5 @@
 			<artifactId>libphonenumber</artifactId>
 			<version>8.13.42</version>
 		</dependency>
-
 	</dependencies>
 </project>
