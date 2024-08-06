@@ -39,9 +39,8 @@ public class SecurityConfig {
     @Value("${jwt.private-key}")
     private RSAPrivateKey privateKey;
     
-    //todos os endpoints são públicos apenas temporiaramente para facilitar o desenvolvimento
     private static final String[] PUBLIC_MATCHERS = {
-            "/**" //TODO: remover
+            "/"
     };
 
     private static final String[] PUBLIC_MATCHERS_POST = {
