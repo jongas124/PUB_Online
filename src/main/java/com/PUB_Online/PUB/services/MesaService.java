@@ -40,14 +40,6 @@ public class MesaService {
         return this.mesaRepository.findAll();
     }
 
-    public List<Mesa> findLivres() {
-        return this.mesaRepository.findByComandaIsNull();
-    }
-
-    public List<Mesa> findOcupadas() {
-        return this.mesaRepository.findByComandaIsNotNull();
-    }
-
     public Mesa update(Long numero, Integer novaCapacidade) {
         if (numero == null || numero <= 0) {
             throw new IllegalArgumentException("Número da mesa inválido");

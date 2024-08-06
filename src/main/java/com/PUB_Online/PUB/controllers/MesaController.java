@@ -53,19 +53,6 @@ public class MesaController {
         Mesa obj = this.mesaService.findById(numero);
         return ResponseEntity.ok().body(obj);
     }
-
-    @GetMapping("/livres")
-    public ResponseEntity<List<Mesa>> findLivres() {
-        List<Mesa> obj = this.mesaService.findLivres();
-        return ResponseEntity.ok().body(obj);
-    }
-
-    @PreAuthorize("hasAnyAuthority('SCOPE_ADMIN', 'SCOPE_GARCOM')")
-    @GetMapping("/ocupadas")
-    public ResponseEntity<List<Mesa>> findOcupadas() {
-        List<Mesa> obj = this.mesaService.findOcupadas();
-        return ResponseEntity.ok().body(obj);
-    }
     
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @PutMapping("/{numero}")
