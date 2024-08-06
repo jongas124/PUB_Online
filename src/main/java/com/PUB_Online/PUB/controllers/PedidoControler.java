@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 
 
@@ -33,6 +34,7 @@ public class PedidoControler {
     @Autowired
     private PedidoService pedidoService;
 
+    @PostMapping
     public ResponseEntity<Void> create(@RequestBody List<ItemPedidoDTO> itens) {
         Pedido obj = this.pedidoService.create(itens);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -56,9 +58,9 @@ public class PedidoControler {
 
     @PreAuthorize("hasAnyAuthority('SCOPE_ADMIN', 'SCOPE_GARCOM')")
     @PutMapping("/{id}")
-    public ResponseEntity<Pedido> updateStatus(@PathVariable Long id, @RequestBody Status status) {
-    Pedido newObj = this.pedidoService.updateStatus(id, status);
-    return ResponseEntity.ok().body(newObj);
+    public ResponseEntity<Void> updateStatus(@PathVariable Long id, @RequestBody Status status) {
+    this.pedidoService.updateStatus(id, status);
+    return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")

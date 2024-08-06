@@ -63,4 +63,8 @@ public class MesaService {
         obj.setCapacidade(mesa.capacidade());
         return obj;
     }
+
+    public Mesa saveMesa(Mesa mesa) {
+        return this.mesaRepository.save(mesa);
+    }
 }

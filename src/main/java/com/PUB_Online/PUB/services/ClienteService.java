@@ -87,7 +87,7 @@ public class ClienteService {
         if(cliente.isPresent()) {
             return cliente.get();
         } else {
-            throw new ObjectNotFoundException("Usuário com o email: " + email + "não encontrado");
+            throw new ObjectNotFoundException("Usuário com o email: " + email + " não encontrado");
         }
     }
 
@@ -145,6 +145,11 @@ public class ClienteService {
         Cliente newobj = this.findByCpf(obj.getCpf());
         newobj.setPassword(argon2Encoder.encode(update.password()));
         return this.clienteRepository.save(newobj);
+    }
+
+    @Transactional
+    public Cliente saveCliente(Cliente obj) {
+        return this.clienteRepository.save(obj);
     }
 
     public void addTelefones(String cpf, Set<String> telefones) {

@@ -41,10 +41,10 @@ public class ComandaController {
     @Autowired
     private PedidoService pedidoService;
 
-    @PostMapping
-    public ResponseEntity<Void> create(@RequestBody Long pedidoId, JwtAuthenticationToken token) {
+    @PostMapping("/{pedidoId}")
+    public ResponseEntity<Void> create(@PathVariable Long pedidoId, JwtAuthenticationToken token) {
         Cliente cliente = this.clienteService.findByCpf(token.getName());
-        Pedido pedido = this.pedidoService.findById(pedidoId, token.getName());
+        Pedido pedido = this.pedidoService.findByIdCreateUpdate(pedidoId, token.getName());
         Comanda comanda = this.comandaService.create(cliente, pedido);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{numero}").buildAndExpand(comanda.getNumero()).toUri();
@@ -77,7 +77,7 @@ public class ComandaController {
     @PutMapping
     public ResponseEntity<Comanda> update(@RequestBody Long pedidoId, JwtAuthenticationToken token) {
         Cliente cliente = this.clienteService.findByCpf(token.getName());
-        Pedido pedido = this.pedidoService.findById(pedidoId, token.getName());
+        Pedido pedido = this.pedidoService.findByIdCreateUpdate(pedidoId, token.getName());
         Comanda comanda = this.comandaService.update(cliente, pedido);
         return ResponseEntity.ok().body(comanda);
     }

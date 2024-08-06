@@ -57,7 +57,7 @@ public class MenuService {
 
     public Prato findPratoById(Long id) {
         Optional<Prato> prato = this.pratoRepository.findById(id);
-        if(prato.isPresent()) {
+        if(prato.isPresent() && prato.get().getType().equals("prato")) {
             return prato.get();
         } else {
             throw new ObjectNotFoundException("Prato do menu não encontrado");
@@ -66,10 +66,10 @@ public class MenuService {
 
     public Bebida findBebidaById(Long id) {
         Optional<Bebida> bebida = this.bebidaRepository.findById(id);
-        if(bebida.isPresent()) {
+        if(bebida.isPresent() && bebida.get().getType().equals("bebida")) {
             return bebida.get();
         } else {
-            throw new ObjectNotFoundException("Bebida do menu não encontrado");
+            throw new ObjectNotFoundException("Bebida do menu não encontrada");
         }
     }
 
@@ -132,6 +132,10 @@ public class MenuService {
             newObj.setQuantidadeEstoque(update.quantidadeEstoque());
         }
         this.bebidaRepository.save(newObj);
+    }
+
+    public void updateBebidaQuantidade(Bebida obj) {
+        this.bebidaRepository.save(obj);
     }
 
     public void delete(Long id) {

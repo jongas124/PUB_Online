@@ -8,6 +8,9 @@ import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,12 +26,13 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name="pedidos")
-@Data
+@Getter @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Pedido {
     public static final String TABLE_NAME = "pedidos";
     
@@ -57,9 +61,9 @@ public class Pedido {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ItemPedido> itens = new ArrayList<ItemPedido>();
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "comanda_numero", nullable = false, updatable = false, referencedColumnName = "numero")
-    @NotNull
+    @ManyToOne
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) 
+    @JoinColumn(name = "comanda_numero", updatable = false, referencedColumnName = "numero")
     private Comanda comanda;
     
     @Getter

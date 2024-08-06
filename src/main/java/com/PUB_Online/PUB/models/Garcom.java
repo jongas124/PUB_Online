@@ -3,6 +3,7 @@ package com.PUB_Online.PUB.models;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CollectionTable;
@@ -22,6 +23,7 @@ import lombok.Getter;
 @Entity
 @Table(name = "garcons")
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Garcom {
     public static final String TABLE_NAME = "garcons";
 

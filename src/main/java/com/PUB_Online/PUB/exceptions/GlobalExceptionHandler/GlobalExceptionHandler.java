@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.PUB_Online.PUB.exceptions.ComandaException;
 import com.PUB_Online.PUB.exceptions.DuplicatedValueException;
 import com.PUB_Online.PUB.exceptions.HorarioException;
 import com.PUB_Online.PUB.exceptions.InvalidCPFException;
@@ -24,6 +25,7 @@ import com.PUB_Online.PUB.exceptions.MenuException;
 import com.PUB_Online.PUB.exceptions.ObjectNotFoundException;
 import com.PUB_Online.PUB.exceptions.PedidoException;
 import com.PUB_Online.PUB.exceptions.PermissionException;
+import com.PUB_Online.PUB.exceptions.ReservaException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,17 +36,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @Value("${server.error.include-exception}")
     private boolean printStackTrace;
 
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<Object> handleAllUncaughtException(
-            Exception exception,
+    @ExceptionHandler(ComandaException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Object> handleComandaException(
+        ComandaException comandaException,
             WebRequest request) {
-        final String errorMessage = "Um erro desconhecido ocorreu";
-        log.error(errorMessage, exception);
+        final String errorMessage = comandaException.getMessage();
+        log.error(errorMessage, comandaException);
         return buildErrorResponse(
-                exception,
+                comandaException,
                 errorMessage,
-                HttpStatus.INTERNAL_SERVER_ERROR,
+                HttpStatus.BAD_REQUEST,
                 request);
     }
 
@@ -227,6 +229,20 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 permissionException,
                 errorMessage,
                 HttpStatus.FORBIDDEN,
+                request);
+    }
+
+    @ExceptionHandler(ReservaException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Object> handleReservaException(
+            ReservaException reservaException,
+            WebRequest request) {
+        final String errorMessage = reservaException.getMessage();
+        log.error(errorMessage, reservaException);
+        return buildErrorResponse(
+                reservaException,
+                errorMessage,
+                HttpStatus.BAD_REQUEST,
                 request);
     }
 

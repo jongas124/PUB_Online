@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.PUB_Online.PUB.controllers.dtos.ItemPedidoDTO;
+import com.PUB_Online.PUB.exceptions.ComandaException;
 import com.PUB_Online.PUB.exceptions.HorarioException;
 import com.PUB_Online.PUB.exceptions.ObjectNotFoundException;
 import com.PUB_Online.PUB.exceptions.PedidoException;
@@ -40,7 +41,7 @@ public class PedidoService {
         obj.setItens(itens.stream().map(item -> this.itemPedidoService.fromDTO(item)).toList());
         obj.setPreco(new BigDecimal("0.00"));
         for (int i = 0; i < itens.size(); i++) {
-            obj.getPreco().add(obj.getItens().get(i).getPrecoItemPedido());
+            obj.setPreco(obj.getPreco().add(obj.getItens().get(i).getPrecoItemPedido().multiply(new BigDecimal(obj.getItens().get(i).getQuantidade()))));
         }
         obj.setStatus(Status.FILA);
         obj = this.pedidoRepository.save(obj);
@@ -49,7 +50,19 @@ public class PedidoService {
 
     public Pedido findById(Long id, String cpf) {
         Comanda comanda = this.clienteService.findByCpf(cpf).getComanda();
+        if (comanda == null) {
+            throw new ComandaException("Somente pedidos com comanda podem ser visualizados");
+        }
         Optional<Pedido> obj = comanda.getPedidos().stream().filter(pedido -> pedido.getId() == id).findFirst();
+        if(obj.isPresent()) {
+            return obj.get();
+        } else {
+            throw new ObjectNotFoundException("Pedido não encontrado");
+        }
+    }
+
+    public Pedido findByIdCreateUpdate(Long id, String cpf) {
+        Optional<Pedido> obj = this.pedidoRepository.findById(id);
         if(obj.isPresent()) {
             return obj.get();
         } else {
@@ -92,6 +105,10 @@ public class PedidoService {
 
     public void deleteAdmin(Long id) {
         this.pedidoRepository.deleteById(id);
+    }
+
+    public Pedido savePedido(Pedido pedido) {
+        return this.pedidoRepository.save(pedido);
     }
 
 

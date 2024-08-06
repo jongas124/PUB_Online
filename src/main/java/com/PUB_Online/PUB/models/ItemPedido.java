@@ -2,6 +2,8 @@ package com.PUB_Online.PUB.models;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,6 +16,7 @@ import lombok.Data;
 @Entity
 @Table(name = "itens_pedido")
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ItemPedido {
 
     public static final String TABLE_NAME = "itens_pedido";

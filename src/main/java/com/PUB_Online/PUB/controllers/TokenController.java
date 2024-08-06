@@ -54,8 +54,7 @@ public class TokenController {
         }
 
         Instant now = Instant.now();
-        Long expiresIn = 3000L; // 3000 segundos: 50 minutos
-
+        Long expiresIn = 30000L; // 30000 segundos: 500 minutos
         String scope = cliente.getRole().toString();
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
@@ -85,8 +84,7 @@ public class TokenController {
         }
 
         Instant now = Instant.now();
-        Long expiresIn = 3000L; // 3000 segundos: 50 minutos
-
+        Long expiresIn = 30000L; // 30000 segundos: 500 minutos
         String scope = garcom.getRole().toString();
 
         JwtClaimsSet claims = JwtClaimsSet.builder()

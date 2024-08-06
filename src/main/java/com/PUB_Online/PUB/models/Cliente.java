@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CollectionTable;
@@ -22,12 +23,13 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "clientes")
-@Data
+@Getter @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Cliente {
     public static final String TABLE_NAME = "clientes";
 
@@ -61,9 +63,11 @@ public class Cliente {
     private String password;
 
     @OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) 
     private List<Reserva> reservas = new ArrayList<Reserva>();
 
     @OneToOne
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) 
     @JoinColumn(name = "comanda_numero", referencedColumnName = "numero")
     private Comanda comanda;
 

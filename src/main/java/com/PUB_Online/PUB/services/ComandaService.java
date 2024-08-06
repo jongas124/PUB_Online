@@ -8,9 +8,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.PUB_Online.PUB.exceptions.ComandaException;
 import com.PUB_Online.PUB.exceptions.ObjectNotFoundException;
 import com.PUB_Online.PUB.models.Cliente;
 import com.PUB_Online.PUB.models.Comanda;
+import com.PUB_Online.PUB.models.Mesa;
 import com.PUB_Online.PUB.models.Pedido;
 import com.PUB_Online.PUB.repositories.ComandaRepository;
 
@@ -23,13 +25,26 @@ public class ComandaService {
     @Autowired
     private MesaService mesaService;
 
+    @Autowired
+    private PedidoService pedidoService;
+
+    @Autowired
+    private ClienteService clienteService;
+
     public Comanda create(Cliente cliente, Pedido pedido) {
+        if (cliente.getComanda() != null) {
+            throw new ComandaException("Este cliente já possui comanda");
+        }
         Comanda comanda = new Comanda();
         comanda.setPedidos(List.of(pedido));
+        comanda.setValorTotal(new BigDecimal("0.00").add(pedido.getPreco()));
         comanda.setCliente(cliente);
-        comanda.setValorTotal(new BigDecimal("0.00"));
-        comanda.getValorTotal().add(pedido.getPreco());
-        return comanda = this.comandaRepository.save(comanda);
+        comanda = this.comandaRepository.save(comanda);
+        pedido.setComanda(comanda);
+        this.pedidoService.savePedido(pedido);
+        cliente.setComanda(comanda);
+        this.clienteService.saveCliente(cliente);
+        return comanda;
     }
 
     public Comanda findByCliente(Cliente cliente) {
@@ -48,22 +63,33 @@ public class ComandaService {
         Comanda comanda = cliente.getComanda();
         comanda.getPedidos().add(pedido);
         comanda.setValorTotal(comanda.getValorTotal().add(pedido.getPreco()));
-        return this.comandaRepository.save(comanda);
+        comanda = this.comandaRepository.save(comanda);
+        pedido.setComanda(comanda);
+        this.pedidoService.savePedido(pedido);
+        return comanda;
     }
 
     public void delete(Cliente cliente) {
         Comanda comanda = cliente.getComanda();
+        cliente.setComanda(null);
+        comanda.setCliente(null);
         comanda.setHoraFechamentoComanda(LocalTime.now());
+        this.clienteService.saveCliente(cliente);
         this.comandaRepository.save(comanda);
     }
 
     public Comanda createViaMesa(Long numeroMesa, Pedido pedido) {
         Comanda comanda = new Comanda();
+        Mesa mesa = this.mesaService.findById(numeroMesa);
         comanda.setPedidos(List.of(pedido));
-        comanda.setMesa(mesaService.findById(numeroMesa));
-        comanda.setValorTotal(new BigDecimal("0.00"));
-        comanda.getValorTotal().add(pedido.getPreco());
-        return comanda = this.comandaRepository.save(comanda);
+        comanda.setMesa(mesa);
+        comanda.setValorTotal(new BigDecimal("0.00").add(pedido.getPreco()));
+        comanda = this.comandaRepository.save(comanda);
+        mesa.setComanda(comanda);
+        this.mesaService.saveMesa(mesa);
+        pedido.setComanda(comanda);
+        this.pedidoService.savePedido(pedido);
+        return comanda;
     }
 
     public Comanda findByMesa(Long numeroMesa) {
@@ -76,17 +102,27 @@ public class ComandaService {
     }
 
     public Comanda updateViaMesa(Long numeroMesa, Pedido pedido) {
+        Mesa mesa = this.mesaService.findById(numeroMesa);
         if (mesaService.findById(numeroMesa) == null) {
             return this.createViaMesa(numeroMesa, pedido);
         }
         Comanda comanda = mesaService.findById(numeroMesa).getComanda();
         comanda.getPedidos().add(pedido);
         comanda.setValorTotal(comanda.getValorTotal().add(pedido.getPreco()));
-        return this.comandaRepository.save(comanda);
+        comanda = this.comandaRepository.save(comanda);
+        mesa.setComanda(comanda);
+        this.mesaService.saveMesa(mesa);
+        pedido.setComanda(comanda);
+        this.pedidoService.savePedido(pedido);
+        return comanda;
     }
 
     public void deleteViaMesa(Long numeroMesa) {
         Comanda comanda = mesaService.findById(numeroMesa).getComanda();
+        Mesa mesa = mesaService.findById(numeroMesa);
+        mesa.setComanda(null);
+        this.mesaService.saveMesa(mesa);
+        comanda.setMesa(null);
         comanda.setHoraFechamentoComanda(LocalTime.now());
         this.comandaRepository.save(comanda);
     }
