@@ -63,7 +63,7 @@ public class Pedido {
 
     @ManyToOne
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) 
-    @JoinColumn(name = "comanda_numero", updatable = false, referencedColumnName = "numero")
+    @JoinColumn(name = "comanda_numero", referencedColumnName = "numero")
     private Comanda comanda;
     
     @Getter

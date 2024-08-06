@@ -37,6 +37,7 @@ public class Mesa {
     private List<Reserva> reservas = new ArrayList<Reserva>();
 
     @OneToOne
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @JoinColumn(name = "comanda_numero", referencedColumnName = "numero")
     private Comanda comanda;
 

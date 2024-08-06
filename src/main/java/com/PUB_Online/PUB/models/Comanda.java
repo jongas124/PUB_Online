@@ -49,7 +49,7 @@ public class Comanda {
     @Column(name = "hora_abertura_comanda", updatable = false)
     private LocalTime horaAberturaComanda;
     
-    @Column(name = "hora_fechamento_comanda", updatable = false)
+    @Column(name = "hora_fechamento_comanda")
     private LocalTime horaFechamentoComanda;
 
     @OneToOne(mappedBy = "comanda")

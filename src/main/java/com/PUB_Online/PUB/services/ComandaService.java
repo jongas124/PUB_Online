@@ -48,6 +48,9 @@ public class ComandaService {
     }
 
     public Comanda findByCliente(Cliente cliente) {
+        if (cliente.getComanda() == null) {
+            throw new ObjectNotFoundException("Este cliente não possui comanda");
+        }
         Optional<Comanda> comanda = this.comandaRepository.findById(cliente.getComanda().getNumero());
         if (comanda.isPresent()) {
             return comanda.get();
@@ -70,10 +73,11 @@ public class ComandaService {
     }
 
     public void delete(Cliente cliente) {
-        Comanda comanda = cliente.getComanda();
+        Comanda comanda = this.findByCliente(cliente);
+        LocalTime now = LocalTime.now();
+        comanda.setHoraFechamentoComanda(now);
         cliente.setComanda(null);
         comanda.setCliente(null);
-        comanda.setHoraFechamentoComanda(LocalTime.now());
         this.clienteService.saveCliente(cliente);
         this.comandaRepository.save(comanda);
     }
@@ -81,9 +85,12 @@ public class ComandaService {
     public Comanda createViaMesa(Long numeroMesa, Pedido pedido) {
         Comanda comanda = new Comanda();
         Mesa mesa = this.mesaService.findById(numeroMesa);
+        if (mesa.getComanda() != null) {
+            throw new ComandaException("Esta mesa já possui comanda");
+        }
         comanda.setPedidos(List.of(pedido));
-        comanda.setMesa(mesa);
         comanda.setValorTotal(new BigDecimal("0.00").add(pedido.getPreco()));
+        comanda.setMesa(mesa);
         comanda = this.comandaRepository.save(comanda);
         mesa.setComanda(comanda);
         this.mesaService.saveMesa(mesa);
@@ -93,9 +100,10 @@ public class ComandaService {
     }
 
     public Comanda findByMesa(Long numeroMesa) {
-        Optional<Comanda> comanda = this.comandaRepository.findById(mesaService.findById(numeroMesa).getNumero());
-        if (comanda.isPresent()) {
-            return comanda.get();
+        Mesa mesa = this.mesaService.findById(numeroMesa);
+        Comanda comanda = mesa.getComanda();
+        if (comanda != null) {
+            return comanda;
         } else {
             throw new ObjectNotFoundException("Esta mesa não possui comanda");
         }

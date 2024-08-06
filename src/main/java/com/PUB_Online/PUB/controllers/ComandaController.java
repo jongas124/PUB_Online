@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -51,20 +50,35 @@ public class ComandaController {
         return ResponseEntity.created(uri).build();
     }
 
+    @GetMapping
+    public ResponseEntity<Comanda> findByToken(JwtAuthenticationToken token) {
+        Comanda obj = this.clienteService.findByCpf(token.getName()).getComanda();
+        return ResponseEntity.ok().body(obj);
+    }
+
+    @PutMapping("/{pedidoId}")
+    public ResponseEntity<Void> update(@PathVariable Long pedidoId, JwtAuthenticationToken token) {
+        Cliente cliente = this.clienteService.findByCpf(token.getName());
+        Pedido pedido = this.pedidoService.findByIdCreateUpdate(pedidoId, token.getName());
+        this.comandaService.update(cliente, pedido);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> delete(JwtAuthenticationToken token) {
+        Cliente cliente = this.clienteService.findByCpf(token.getName());
+        this.comandaService.delete(cliente);
+        return ResponseEntity.noContent().build();
+    }
+
     @PreAuthorize("hasAnyAuthority('SCOPE_ADMIN', 'SCOPE_GARCOM')")
-    @PostMapping("/mesa/{mesaId}")
-    public ResponseEntity<Void> createViaMesa(@PathVariable Long mesaId, @RequestBody Long pedidoId) {
+    @PostMapping("/mesa/{mesaId}/pedido/{pedidoId}")
+    public ResponseEntity<Void> createViaMesa(@PathVariable("mesaId") Long mesaId, @PathVariable("pedidoId") Long pedidoId) {
         Pedido pedido = this.pedidoService.findByIdGarcom(pedidoId);
         Comanda comanda = this.comandaService.createViaMesa(mesaId, pedido);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{numero}").buildAndExpand(comanda.getNumero()).toUri();
         return ResponseEntity.created(uri).build();
-    }
-
-    @GetMapping
-    public ResponseEntity<Comanda> findByToken(JwtAuthenticationToken token) {
-        Comanda obj = this.clienteService.findByCpf(token.getName()).getComanda();
-        return ResponseEntity.ok().body(obj);
     }
 
     @PreAuthorize("hasAnyAuthority('SCOPE_ADMIN', 'SCOPE_GARCOM')")
@@ -74,26 +88,11 @@ public class ComandaController {
         return ResponseEntity.ok().body(obj);
     }
 
-    @PutMapping
-    public ResponseEntity<Comanda> update(@RequestBody Long pedidoId, JwtAuthenticationToken token) {
-        Cliente cliente = this.clienteService.findByCpf(token.getName());
-        Pedido pedido = this.pedidoService.findByIdCreateUpdate(pedidoId, token.getName());
-        Comanda comanda = this.comandaService.update(cliente, pedido);
-        return ResponseEntity.ok().body(comanda);
-    }
-
     @PreAuthorize("hasAnyAuthority('SCOPE_ADMIN', 'SCOPE_GARCOM')")
-    @PutMapping("/mesa/{numeroMesa}")
-    public ResponseEntity<Comanda> updateViaMesa(@PathVariable Long numeroMesa, @RequestBody Long pedidoId) {
+    @PutMapping("/mesa/{numeroMesa}/pedido/{pedidoId}")
+    public ResponseEntity<Void> updateViaMesa(@PathVariable("numeroMesa") Long numeroMesa, @PathVariable("pedidoId") Long pedidoId) {
         Pedido pedido = this.pedidoService.findByIdGarcom(pedidoId);
-        Comanda comanda = this.comandaService.updateViaMesa(numeroMesa, pedido);
-        return ResponseEntity.ok().body(comanda);
-    }
-
-    @DeleteMapping
-    public ResponseEntity<Void> delete(JwtAuthenticationToken token) {
-        Cliente cliente = this.clienteService.findByCpf(token.getName());
-        this.comandaService.delete(cliente);
+        this.comandaService.updateViaMesa(numeroMesa, pedido);
         return ResponseEntity.noContent().build();
     }
 
