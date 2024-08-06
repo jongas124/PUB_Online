@@ -102,11 +102,4 @@ public class ComandaController {
         this.comandaService.deleteViaMesa(numeroMesa);
         return ResponseEntity.noContent().build();
     }
-
-    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-    @DeleteMapping("/admin/{idMesa}")
-    public ResponseEntity<Void> deleteAdmin(@PathVariable Long idMesa) {
-        this.comandaService.deleteAdmin(idMesa);
-        return ResponseEntity.noContent().build();
-    }
 }

@@ -19,10 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.PUB_Online.PUB.controllers.dtos.ReservaCreateDTO;
-import com.PUB_Online.PUB.exceptions.ObjectNotFoundException;
 import com.PUB_Online.PUB.models.Reserva;
 import com.PUB_Online.PUB.services.ClienteService;
 import com.PUB_Online.PUB.services.ReservaService;
+
+import jakarta.transaction.Transactional;
 
 @RestController
 @RequestMapping("/reserva")
@@ -76,22 +77,21 @@ public class ReservaController {
     }
 
     @PreAuthorize("hasAnyAuthority('SCOPE_ADMIN', 'SCOPE_GARCOM')")
-    @GetMapping("/{numero}")
+    @GetMapping("id/{numero}")
     public ResponseEntity<Reserva> findByNumero(@PathVariable Long numero) {
         Reserva obj = this.reservaService.findById(numero);
         return ResponseEntity.ok().body(obj);
     }
 
+    @Transactional
     @DeleteMapping("/{numero}")
     public ResponseEntity<Void> delete(@PathVariable Long numero, JwtAuthenticationToken token) {
-        Reserva reserva = this.reservaService.findById(numero);
-        if (!reserva.getCliente().getCpf().equals(token.getName())) {
-            throw new ObjectNotFoundException("Reserva não encontrada");
-        }
+        this.reservaService.delete(numero, token.getName());
         return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    @Transactional
     @DeleteMapping("/admin/{numero}")
     public ResponseEntity<Void> deleteAdmin(@PathVariable Long numero) {
         this.reservaService.deleteAdmin(numero);

@@ -25,22 +25,22 @@ public class Reserva {
     @Column(name = "numero", unique = true)
     private Long numero;
     
-    @Column(name = "data_reserva", nullable = false, updatable = false)
+    @Column(name = "data_reserva", nullable = false)
     private LocalDate dataReserva;
 
-    @Column(name = "hora_reserva", nullable = false, updatable = false)
+    @Column(name = "hora_reserva", nullable = false)
     private LocalTime horaAberturaReserva;
 
-    @Column(name = "numero_pessoas", nullable = false, updatable = false)
+    @Column(name = "numero_pessoas", nullable = false)
     private Integer numeroPessoas;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "cliente_cpf", nullable = false, updatable = false, referencedColumnName = "cpf")
+    @JoinColumn(name = "cliente_cpf", nullable = false, referencedColumnName = "cpf")
     @NotNull
     private Cliente cliente;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "mesa_numero", nullable = false, updatable = false, referencedColumnName = "numero")
+    @JoinColumn(name = "mesa_numero", nullable = false, referencedColumnName = "numero")
     @NotNull
     private Mesa mesa;
     

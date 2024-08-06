@@ -47,7 +47,13 @@ public class ReservaService {
         newReserva.setHoraAberturaReserva(reserva.getHoraAberturaReserva());
         newReserva.setNumeroPessoas(reserva.getNumeroPessoas());
         newReserva.setMesa(this.findMesaDisponivel(reserva.getDataReserva(), reserva.getHoraAberturaReserva(), reserva.getNumeroPessoas()));
-        return this.reservaRepository.save(reserva);
+        this.reservaRepository.save(newReserva);
+        Mesa mesa = this.mesaService.findById(newReserva.getMesa().getNumero());
+        mesa.getReservas().add(newReserva);
+        this.mesaService.saveMesa(mesa);
+        cliente.getReservas().add(newReserva);
+        this.clienteService.saveCliente(cliente);
+        return newReserva;
     }
 
     public List<Reserva> findAll() {
@@ -71,11 +77,11 @@ public class ReservaService {
         if (!reserva.getCliente().getCpf().equals(cpf)) {
             throw new ObjectNotFoundException("Reserva não encontrada");
         }
-        this.reservaRepository.deleteById(id);
+        this.reservaRepository.deleteByNumero(id);    
     }
 
     public void deleteAdmin(Long id) {
-        this.reservaRepository.deleteById(id);
+        this.reservaRepository.deleteByNumero(id);
     }
 
     public Mesa findMesaDisponivel(LocalDate data, LocalTime hora, Integer pessoas) {
@@ -91,7 +97,7 @@ public class ReservaService {
         DiasSemana diaSemana = DiasSemana.fromCode(codigoDia);
         HorarioFuncionamento obj = horarioFuncionamentoService.findByDiaSemana(diaSemana);
         if(hora.isBefore(obj.getHoraAbertura()) || hora.isAfter(obj.getHoraFechamento())) {
-            throw new HorarioException("A data fornecida está fora do horário de funcionamento");
+            throw new HorarioException("O horario fornecida está fora do horário de funcionamento");
         }
         List<Mesa> mesas = this.mesaService.findAll();
         for(int i = 0; i < mesas.size(); i++) {
@@ -106,10 +112,9 @@ public class ReservaService {
                         return mesa;
                     }
                 }
-                throw new ReservaException("Não existem mesas disponíveis no dia selecionado");
             }
         }
-        throw new ReservaException("Não existem mesas que consigam acomodar o numero de pessoas fornecido");
+        throw new ReservaException("Não existem mesas disponíveis no dia selecionado ou não existem mesas que consigam acomodar o numero de pessoas fornecido");
     }
 
     public Reserva fromDTO (ReservaCreateDTO dto) {
